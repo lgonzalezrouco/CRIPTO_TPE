@@ -1,4 +1,4 @@
-package org.example;
+package ar.edu.itba.cripto;
 
 public class Main {
     public static void main(String[] args) {
