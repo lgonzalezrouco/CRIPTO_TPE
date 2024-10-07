@@ -1,6 +1,7 @@
 package ar.edu.itba.cripto;
 
 import ar.edu.itba.cripto.arguments.Parser;
+import ar.edu.itba.cripto.steganography.LSBX;
 
 import java.util.Optional;
 
