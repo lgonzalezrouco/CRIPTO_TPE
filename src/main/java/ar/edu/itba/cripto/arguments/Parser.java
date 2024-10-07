@@ -20,9 +20,9 @@ public class Parser {
         options.addRequiredOption("p", "p", true, "Carrier file");
         options.addRequiredOption("out", "out", true, "Output file");
         options.addRequiredOption("steg", "steg", true, "Steganography algorithm");
-        options.addOption("a", "Encryption algorithm");
-        options.addOption("m", "Encryption mode");
-        options.addOption("pass", true, "Encryption key");
+        options.addOption("pwd","pwd",true, "Encryption key");
+        options.addOption("a","a", true, "Encryption algorithm");
+        options.addOption("m","m", true, "Encryption mode");
     }
 
     public Optional<Arguments> parse(String[] args) {
@@ -38,13 +38,13 @@ public class Parser {
     private Optional<Arguments> getArguments(CommandLine cmd) {
         Actions action = cmd.hasOption("embed") ? Actions.EMBED : Actions.EXTRACT;
         String inputFile = cmd.getOptionValue("in");
+        String password = cmd.getOptionValue("pwd");
         String carrierFile = cmd.getOptionValue("p");
         String outputFile = cmd.getOptionValue("out");
         SteganographyType steganographyType = SteganographyType.valueOf(cmd.getOptionValue("steg").toUpperCase());
 
-        EncryptionAlgorithm encryptionAlgorithm = EncryptionAlgorithm.fromString(cmd.getOptionValue("a", "aes128").toUpperCase());
+        EncryptionAlgorithm encryptionAlgorithm = EncryptionAlgorithm.fromString(cmd.getOptionValue("a", "aes128"));
         EncryptionMode encryptionMode = EncryptionMode.valueOf(cmd.getOptionValue("m", "cbc").toUpperCase());
-        String password = cmd.getOptionValue("pass");
 
         EncryptionOptions encryptionOptions = new EncryptionOptions(
                 encryptionAlgorithm,
@@ -69,6 +69,14 @@ public class Parser {
                 System.err.println("Input file is not required");
                 return false;
             }
+            if(encryptionOptions.getPassword() == null) {
+                if (encryptionOptions.getMode() != null || encryptionOptions.getAlgorithm() != null) {
+                    System.err.println("Password is required");
+                    return false;
+                }
+                // default values
+            }
+
             return true;
         }
     }

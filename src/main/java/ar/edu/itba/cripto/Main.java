@@ -5,8 +5,11 @@ import ar.edu.itba.cripto.arguments.Parser;
 import java.util.Optional;
 
 public class Main {
+
+
     public static void main(String[] args) {
         Optional<Parser.Arguments> cli = new Parser().parse(args);
+        // logger
 
         if (cli.isEmpty()) {
             System.err.println("Error: Invalid arguments");

@@ -13,7 +13,10 @@ public enum EncryptionAlgorithm {
             case "aes192" -> AES192;
             case "aes256" -> AES256;
             case "3des" -> DES3;
-            default -> throw new IllegalArgumentException("Invalid algorithm");
+            default ->{
+                System.out.println(algorithm);
+                throw new IllegalArgumentException("Invalid algorithm");
+            }
         };
     }
 }
