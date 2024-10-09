@@ -4,5 +4,8 @@ public enum EncryptionMode {
     ECB,
     CFB,
     OFB,
-    CBC
+    CBC;
+
+    public static class EncryptionAbstract {
+    }
 }
