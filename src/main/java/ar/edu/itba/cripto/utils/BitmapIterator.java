@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import java.util.Iterator;
 
-public class BitmapIterator implements Iterator<Byte> {
+public class BitmapIterator implements Iterator<PixelByte> {
     @Getter
     private final Bitmap bitmap;
     private int currentX;
@@ -27,20 +27,15 @@ public class BitmapIterator implements Iterator<Byte> {
     }
 
     @Override
-    public Byte next() {
+    public PixelByte next() {
         if (!hasNext()) {
             throw new IllegalStateException("No more pixels to iterate.");
         }
-
         // Calculate the pixel position
         int byteIndex = (currentY * bitmap.getWidth() + currentX) * 3 + colorIndex;
-
         // Get the current color component value
         byte color;
-
-
         color = bitmap.getPixelData()[byteIndex]; // Blue
-
         // Move to the next color component
         colorIndex++;
         if (colorIndex > 2) {
@@ -53,15 +48,11 @@ public class BitmapIterator implements Iterator<Byte> {
                 currentY--;
             }
         }
-
         lastIndex = byteIndex;
-        return color;
+        return new PixelByte(color, Color.values()[colorIndex]);
     }
 
-    // Set a new byte value at the current position
     public void setByte(byte color) {
-        // Calculate the pixel position
-        // Set the specific color component
         bitmap.getPixelData()[lastIndex] = color;
     }
 

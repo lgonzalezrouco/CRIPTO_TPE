@@ -1,13 +1,13 @@
 package ar.edu.itba.cripto.steganography;
 import ar.edu.itba.cripto.utils.Bitmap;
 import ar.edu.itba.cripto.utils.BitmapIterator;
+import ar.edu.itba.cripto.utils.PixelByte;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public abstract class LSBX implements LSB {
 
-    private final int bitsToHide;
+    protected final int bitsToHide;
 
     protected LSBX(int bitsToHide) {
         this.bitsToHide = bitsToHide;
@@ -22,11 +22,12 @@ public abstract class LSBX implements LSB {
         int bitIndex = 7;
 
         while(iterator.hasNext() && byteIndex < hideData.length){
-            byte pixel = iterator.next();
+            PixelByte pixel = iterator.next();
+            byte pixelValue = pixel.getValue();
             for(int j = 0; j < bitsToHide; j++){
                 if(byteIndex < hideData.length){
                     byte bit = (byte) ((hideData[byteIndex] >> bitIndex) & 1);
-                    pixel|= (byte) (bit << j);
+                    pixelValue = (byte) ((pixelValue & ~(1 << j)) | (bit << j)); // Clear target bit and set it to the message bit
                     bitIndex--;
                     if(bitIndex < 0){
                         bitIndex = 7;
@@ -35,7 +36,7 @@ public abstract class LSBX implements LSB {
                 }
             }
             // set pixel
-            iterator.setByte(pixel);
+            iterator.setByte(pixelValue);
         }
     }
 
@@ -45,9 +46,10 @@ public abstract class LSBX implements LSB {
         byte [] num = new byte[4];
         // extract first 4 bytes
         while (iterator.hasNext()){
-            byte pixel = iterator.next();
+            PixelByte pixel = iterator.next();
+            byte pixelValue = pixel.getValue();
             for(int j = 0; j < bitsToHide; j++) {
-                byte bit = (byte) ((pixel >> j) & 1);
+                byte bit = (byte) ((pixelValue >> j) & 1);
                 num[byteIndex] |= (byte) (bit << bitIndex);
                 bitIndex--;
                 if(bitIndex < 0){
@@ -68,32 +70,49 @@ public abstract class LSBX implements LSB {
     }
 
     @Override
-    public byte[] extract(Bitmap carrier) {
+    public EmbeddedFile extract(Bitmap carrier) {
         BitmapIterator iterator = new BitmapIterator(carrier);
         int msgSize = size(iterator);
+
         byte[] extracted = new byte[msgSize];
         int byteIndex = 0;
+        while(iterator.hasNext() && byteIndex < msgSize){
+            Byte pixel = readByte(iterator);
+            extracted[byteIndex] = pixel;
+            byteIndex++;
+        }
+        if (byteIndex != msgSize) {
+            throw  new IllegalArgumentException();
+        }
+        return new EmbeddedFile(extracted, getExtension(iterator));
+    }
+
+    public Byte readByte(BitmapIterator iterator) {
         int bitIndex = 0;
         int currentByte = 0;
 
         while(iterator.hasNext()){
-            byte pixel = iterator.next();
+            PixelByte pixel = iterator.next();
+            byte pixelValue = pixel.getValue();
             for(int j = 0; j < bitsToHide; j++){
-                byte bit = (byte) ((pixel >> j) & 1);
+                byte bit = (byte) ((pixelValue >> j) & 1);
                 currentByte |= (bit << bitIndex);
                 bitIndex++;
-
                 if(bitIndex >= 8){
-                    extracted[byteIndex] = (byte) currentByte;
-                    byteIndex++;
-                    bitIndex = 0;
-                    currentByte = 0;
-                    if (byteIndex == msgSize) {
-                        return extracted;
-                    }
+                    return (byte) currentByte;
                 }
             }
         }
-        throw new IllegalArgumentException("No message found");
+        return null;
+    }
+
+    public String getExtension(BitmapIterator iterator){
+
+        StringBuilder extension = new StringBuilder();
+        while(iterator.hasNext()){
+           extension.append(readByte(iterator));
+        }
+        return extension.toString();
+
     }
 }

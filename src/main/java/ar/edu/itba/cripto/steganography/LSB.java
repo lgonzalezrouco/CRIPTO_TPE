@@ -11,7 +11,7 @@ public interface LSB {
 
     void hide(Bitmap carrier, byte[] message, String extension);
 
-    byte[] extract(Bitmap carrier);
+    EmbeddedFile extract(Bitmap carrier);
 
 
     default byte[] getBytesToHide(byte[] message, String extension){
@@ -23,7 +23,7 @@ public interface LSB {
             extension += "\0";
         }
 
-        // Convertir el tamaño del mensaje a 4 bytes (big-endian)
+        // Convertir el ta  maño del mensaje a 4 bytes (big-endian)
         byte[] sizeBytes = ByteBuffer.allocate(4).putInt(message.length).array();
 
         // Convertir la extensión a bytes usando UTF-8

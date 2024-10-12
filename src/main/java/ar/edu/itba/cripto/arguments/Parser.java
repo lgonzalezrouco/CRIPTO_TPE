@@ -79,5 +79,13 @@ public class Parser {
 
             return true;
         }
+
+        public String getExtension(){
+            // get the input file extension
+            if(inputFile == null){
+                return null;
+            }
+            return inputFile.substring(inputFile.lastIndexOf('.') + 1);
+        }
     }
 }

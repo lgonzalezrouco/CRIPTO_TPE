@@ -11,7 +11,7 @@ public class LSBI implements LSB {
     }
 
     @Override
-    public byte[] extract(Bitmap carrier) {
-        return new byte[0];
+    public EmbeddedFile extract(Bitmap carrier) {
+        return new EmbeddedFile(new byte[2], ".txt");
     }
 }
