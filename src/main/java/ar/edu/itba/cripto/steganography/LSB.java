@@ -2,7 +2,6 @@ package ar.edu.itba.cripto.steganography;
 
 import ar.edu.itba.cripto.utils.Bitmap;
 
-import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 

@@ -85,7 +85,7 @@ public class Parser {
             if(inputFile == null){
                 return null;
             }
-            return inputFile.substring(inputFile.lastIndexOf('.') + 1);
+            return inputFile.substring(inputFile.lastIndexOf('.'));
         }
     }
 }

@@ -30,21 +30,19 @@ public class Main {
 
 
         if (arguments.action() == Actions.EXTRACT) {
+            EmbeddedFile data = lsb.extract(bitmap);
+            try (OutputStream stream = new FileOutputStream(arguments.outputFile() + data.getExtension())) {
+                stream.write(data.getData());
+            }
+        } else {
             String extension = arguments.getExtension();
             try (InputStream stream = new FileInputStream(inputFile)) {
                 byte[] data = stream.readAllBytes();
                 lsb.hide(bitmap, data, extension);
                 bitmap.saveToFile(new File(arguments.outputFile()));
             }
-        } else {
-            EmbeddedFile data = lsb.extract(bitmap);
-            try (OutputStream stream = new FileOutputStream(arguments.outputFile() + data.getExtension())) {
-                stream.write(data.getData());
-            }
+
         }
-
-
-
 
         System.out.println("Arguments: " + arguments);
     }
