@@ -23,7 +23,7 @@ public class EncryptionOptions {
 
     public byte[] encrypt(byte[] data) throws EncryptionException {
         try {
-            return algorithm.getEncryptionX().encrypt(data, password);
+            return algorithm.getEncryptionX().encrypt(data, password, mode);
         } catch (Exception e) {
             throw new EncryptionException("Error encrypting data: " + e.getMessage(), e);
         }
@@ -31,7 +31,7 @@ public class EncryptionOptions {
 
     public byte[] decrypt(byte[] encryptedData) throws EncryptionException {
         try {
-            return algorithm.getEncryptionX().decrypt(encryptedData, password);
+            return algorithm.getEncryptionX().decrypt(encryptedData, password, mode);
         } catch (Exception e) {
             throw new EncryptionException("Error decrypting data: " + e.getMessage(), e);
         }

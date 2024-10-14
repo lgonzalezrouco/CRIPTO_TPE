@@ -1,11 +1,19 @@
 package ar.edu.itba.cripto.encryption;
 
 public enum EncryptionMode {
-    ECB,
-    CFB,
-    OFB,
-    CBC;
+    ECB("/ECB/PKCS5Padding"),
+    CFB("/CFB/NoPadding"),
+    OFB("/OFB/NoPadding"),
+    CBC("/CBC/PKCS5Padding");
 
-    public static class EncryptionAbstract {
+    String name;
+
+    EncryptionMode(String name) {
+        this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }
+
 }
