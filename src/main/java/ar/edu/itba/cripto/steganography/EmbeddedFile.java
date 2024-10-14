@@ -11,5 +11,4 @@ public class EmbeddedFile {
         this.data = data;
         this.extension = extension;
     }
-
 }

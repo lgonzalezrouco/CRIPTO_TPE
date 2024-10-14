@@ -22,28 +22,30 @@ public class Main {
         }
         Arguments arguments = cli.get();
 
-        String inputFile = arguments.inputFile();
-        String carrierFile = arguments.carrierFile();
-
         LSB lsb = arguments.steganographyType().getAlgorithm();
-        Bitmap bitmap = Bitmap.loadFile(new File(carrierFile));
+        Bitmap bitmap = Bitmap.loadFile(new File(arguments.carrierFile()));
 
 
         if (arguments.action() == Actions.EXTRACT) {
-            EmbeddedFile data = lsb.extract(bitmap);
-            try (OutputStream stream = new FileOutputStream(arguments.outputFile() + data.getExtension())) {
-                stream.write(data.getData());
-            }
+           extract(arguments, lsb, bitmap);
         } else {
-            String extension = arguments.getExtension();
-            try (InputStream stream = new FileInputStream(inputFile)) {
-                byte[] data = stream.readAllBytes();
-                lsb.hide(bitmap, data, extension);
-                bitmap.saveToFile(new File(arguments.outputFile()));
-            }
-
+            embed(arguments, lsb, bitmap);
         }
+    }
 
-        System.out.println("Arguments: " + arguments);
+
+    public static void embed(Arguments args, LSB lsb , Bitmap bitmap ) throws IOException {
+        try (InputStream stream = new FileInputStream(args.inputFile())) {
+            byte[] data = stream.readAllBytes();
+            lsb.hide(bitmap, data, args.getExtension());
+            bitmap.saveToFile(new File(args.outputFile()));
+        }
+    }
+
+    public static void extract(Arguments args, LSB lsb , Bitmap bitmap) throws IOException {
+        EmbeddedFile data = lsb.extract(bitmap);
+        try (OutputStream stream = new FileOutputStream(args.outputFile() + data.getExtension())) {
+            stream.write(data.getData());
+        }
     }
 }

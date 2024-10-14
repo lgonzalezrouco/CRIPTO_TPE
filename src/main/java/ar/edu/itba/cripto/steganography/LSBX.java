@@ -84,24 +84,21 @@ public abstract class LSBX implements LSB {
 
         byte[] extracted = new byte[msgSize];
         int byteIndex = 0;
-        while(iterator.hasNext() && byteIndex < msgSize){
-            Byte pixel = readByte(iterator);
+        Byte pixel;
+        while( (pixel = readByte(iterator)) != null && byteIndex < msgSize){
             extracted[byteIndex] = pixel;
             byteIndex++;
         }
-        if (byteIndex != msgSize) {
-            throw  new IllegalArgumentException();
-        }
-
+        // resize to byteIndex
+        extracted = java.util.Arrays.copyOf(extracted, byteIndex);
         return new EmbeddedFile(extracted, getExtension(iterator));
     }
 
     public String getExtension(BitmapIterator iterator){
 
-        StringBuilder extension = new StringBuilder();
-        while(iterator.hasNext()){
-            Byte b = readByte(iterator);
-            // add to extension until \0
+        StringBuilder extension = new StringBuilder().append('.');
+        Byte b;
+        while( (b = readByte(iterator)) != null){
             if(b == 0){
                 break;
             }

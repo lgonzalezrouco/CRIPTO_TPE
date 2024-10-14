@@ -16,7 +16,7 @@ public class BitmapIterator implements Iterator<PixelByte> {
     public BitmapIterator(Bitmap bitmap) {
         this.bitmap = bitmap;
         this.currentX = 0;
-        this.currentY = bitmap.getHeight() - 1; // Start from the bottom row
+        this.currentY = 0;
         this.currentColor = Color.BLUE;
         this.lastIndex = 0;
     }
@@ -24,7 +24,7 @@ public class BitmapIterator implements Iterator<PixelByte> {
     // Check if there are more pixels to iterate
     @Override
     public boolean hasNext() {
-        return currentY >= 0 && currentX < bitmap.getWidth();
+        return currentY < bitmap.getHeight() && currentX < bitmap.getWidth();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BitmapIterator implements Iterator<PixelByte> {
                 currentX++;
             } else {
                 currentX = 0;
-                currentY--;
+                currentY++;
             }
         }
         lastIndex = byteIndex;
