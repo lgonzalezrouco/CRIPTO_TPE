@@ -34,6 +34,7 @@ public class Main {
     }
 
 
+
     public static void embed(Arguments args, LSB lsb , Bitmap bitmap ) throws IOException {
         try (InputStream stream = new FileInputStream(args.inputFile())) {
             byte[] data = stream.readAllBytes();
