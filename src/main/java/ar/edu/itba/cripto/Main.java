@@ -3,6 +3,7 @@ package ar.edu.itba.cripto;
 import ar.edu.itba.cripto.arguments.Actions;
 import ar.edu.itba.cripto.arguments.Parser.Arguments;
 import ar.edu.itba.cripto.arguments.Parser;
+import ar.edu.itba.cripto.encryption.EncryptionX;
 import ar.edu.itba.cripto.steganography.EmbeddedFile;
 import ar.edu.itba.cripto.steganography.LSB;
 import ar.edu.itba.cripto.utils.Bitmap;
@@ -25,15 +26,40 @@ public class Main {
         LSB lsb = arguments.steganographyType().getAlgorithm();
         Bitmap bitmap = Bitmap.loadFile(new File(arguments.carrierFile()));
 
-
         if (arguments.action() == Actions.EXTRACT) {
            extract(arguments, lsb, bitmap);
+
         } else {
             embed(arguments, lsb, bitmap);
         }
     }
 
-
+    public static void encrypt(Arguments args) throws IOException {
+        try (InputStream stream = new FileInputStream(args.inputFile())) {
+            byte[] data = stream.readAllBytes();
+            byte[] encryptedData = args.encryptionOptions().encrypt(data);
+            try (OutputStream outputStream = new FileOutputStream(args.outputFile())) {
+                outputStream.write(encryptedData);
+            }
+        }
+        catch (Exception e) {
+            System.err.println("Error: Invalid arguments");
+            return;
+        }
+    }
+    public static void decrypt(Arguments args) throws IOException {
+        try (InputStream stream = new FileInputStream(args.inputFile())) {
+            byte[] data = stream.readAllBytes();
+            byte[] decryptedData = args.encryptionOptions().decrypt(data);
+            try (OutputStream outputStream = new FileOutputStream(args.outputFile())) {
+                outputStream.write(decryptedData);
+            }
+        }
+        catch (Exception e) {
+            System.err.println("Error: Invalid arguments");
+            return;
+        }
+    }
 
     public static void embed(Arguments args, LSB lsb , Bitmap bitmap ) throws IOException {
         try (InputStream stream = new FileInputStream(args.inputFile())) {

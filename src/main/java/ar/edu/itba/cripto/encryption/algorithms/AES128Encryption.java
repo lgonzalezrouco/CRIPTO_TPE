@@ -51,15 +51,6 @@ public class AES128Encryption implements EncryptionX {
         }
     }
 
-    @Override
-    public byte[] encrypt(byte[] data, String pass) {
-        return encrypt(data,pass,EncryptionMode.CBC);
-    }
-
-    @Override
-    public byte[] decrypt(byte[] encryptedData, String pass) {
-        return decrypt(encryptedData,pass,EncryptionMode.CBC);
-    }
 
     private SecretKey generateKeyFromPassword(String pass) throws Exception {
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
