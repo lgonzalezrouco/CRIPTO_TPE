@@ -3,8 +3,10 @@ package ar.edu.itba.cripto;
 import ar.edu.itba.cripto.arguments.Actions;
 import ar.edu.itba.cripto.arguments.Parser;
 import ar.edu.itba.cripto.arguments.Parser.Arguments;
+import ar.edu.itba.cripto.encryption.exceptions.EncryptionException;
 import ar.edu.itba.cripto.steganography.EmbeddedFile;
 import ar.edu.itba.cripto.steganography.LSB;
+import ar.edu.itba.cripto.steganography.exceptions.MessageToLargeException;
 import ar.edu.itba.cripto.utils.Bitmap;
 
 import java.io.*;
@@ -44,19 +46,22 @@ public class Main {
                 // cipherData: size (4) | data | extension
                 try {
                     dataToEmbed = args.encryptionOptions().encrypt(dataToEmbed);
-                } catch (Exception e) {
+                } catch (EncryptionException e) {
                     throw new RuntimeException("Error encrypting data", e);
                 }
                 dataToEmbed = lsb.getBytesToHide(dataToEmbed);
             }
 
-            int maxDataSize = bitmap.getPixelDataSize() / lsb.getBitsToHidePerPixel();
-            if (dataToEmbed.length > maxDataSize) {
-                throw new IllegalArgumentException("Data is too big for carrier");
+            try {
+                lsb.hide(bitmap, dataToEmbed, args.getExtension(args.inputFile()));
+            } catch (MessageToLargeException e) {
+                throw new RuntimeException("Error: Data is too big for carrier", e);
             }
 
-            lsb.hide(bitmap, dataToEmbed, args.getExtension(args.inputFile()));
             bitmap.saveToFile(new File(args.outputFile()));
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Error: File not found");
         }
     }
 

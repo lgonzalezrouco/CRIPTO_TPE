@@ -1,5 +1,6 @@
 package ar.edu.itba.cripto.steganography;
 
+import ar.edu.itba.cripto.steganography.exceptions.MessageToLargeException;
 import ar.edu.itba.cripto.utils.Bitmap;
 import ar.edu.itba.cripto.utils.BitmapIterator;
 import ar.edu.itba.cripto.utils.PixelByte;
@@ -18,17 +19,17 @@ public abstract class LSBX implements LSB {
 
     @Override
     public void hide(Bitmap carrier, byte[] dataToEmbed, String extension) {
+        int maxDataSize = carrier.getPixelDataSize() / bitsToHide;
+        if (dataToEmbed.length > maxDataSize) {
+            throw new MessageToLargeException("Data is too big for carrier");
+        }
+
         BitmapIterator iterator = new BitmapIterator(carrier);
         int byteIndex = 0;
         while (iterator.hasNext() && byteIndex < dataToEmbed.length) {
             writeByte(dataToEmbed[byteIndex], iterator);
             byteIndex++;
         }
-    }
-
-    @Override
-    public int getBitsToHidePerPixel() {
-        return bitsToHide;
     }
 
     private void writeByte(byte b, BitmapIterator iterator) {

@@ -9,11 +9,6 @@ public class LSBI implements LSB {
     }
 
     @Override
-    public int getBitsToHidePerPixel() {
-        return 0;
-    }
-
-    @Override
     public byte[] extract(Bitmap carrier) {
         return new byte[0];
     }

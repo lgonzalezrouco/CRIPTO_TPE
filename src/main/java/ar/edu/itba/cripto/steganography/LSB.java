@@ -1,5 +1,6 @@
 package ar.edu.itba.cripto.steganography;
 
+import ar.edu.itba.cripto.steganography.exceptions.MessageToLargeException;
 import ar.edu.itba.cripto.utils.Bitmap;
 
 import java.nio.ByteBuffer;
@@ -7,9 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public interface LSB {
 
-    void hide(Bitmap carrier, byte[] message, String extension);
-
-    int getBitsToHidePerPixel();
+    void hide(Bitmap carrier, byte[] message, String extension) throws MessageToLargeException;
 
     byte[] extract(Bitmap carrier);
 
