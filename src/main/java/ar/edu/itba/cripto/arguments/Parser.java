@@ -20,9 +20,9 @@ public class Parser {
         options.addRequiredOption("p", "p", true, "Carrier file");
         options.addRequiredOption("out", "out", true, "Output file");
         options.addRequiredOption("steg", "steg", true, "Steganography algorithm");
-        options.addOption("pwd","pwd",true, "Encryption key");
-        options.addOption("a","a", true, "Encryption algorithm");
-        options.addOption("m","m", true, "Encryption mode");
+        options.addOption("pwd", "pwd", true, "Encryption key");
+        options.addOption("a", "a", true, "Encryption algorithm");
+        options.addOption("m", "m", true, "Encryption mode");
     }
 
     public Optional<Arguments> parse(String[] args) {
@@ -52,7 +52,6 @@ public class Parser {
                 password
         );
 
-
         Arguments args = new Arguments(action, inputFile, carrierFile, outputFile, steganographyType, encryptionOptions);
 
         return args.isValid() ? Optional.of(args) : Optional.empty();
@@ -69,23 +68,18 @@ public class Parser {
                 System.err.println("Input file is not required");
                 return false;
             }
-            if(encryptionOptions.getPassword() == null) {
+            if (encryptionOptions.getPassword() == null) {
                 if (encryptionOptions.getMode() != null || encryptionOptions.getAlgorithm() != null) {
                     System.err.println("Password is required");
                     return false;
                 }
-                // default values
             }
 
             return true;
         }
 
-        public String getExtension(){
-            // get the input file extension
-            if(inputFile == null){
-                return null;
-            }
-            return inputFile.substring(inputFile.lastIndexOf('.'));
+        public String getExtension(String file) {
+            return file.substring(file.lastIndexOf('.'));
         }
     }
 }

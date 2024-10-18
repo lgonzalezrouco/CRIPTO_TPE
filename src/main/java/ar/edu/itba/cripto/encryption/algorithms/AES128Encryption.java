@@ -4,13 +4,13 @@ import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.EncryptionX;
 import lombok.Getter;
 
-
 import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Arrays;
-import javax.crypto.SecretKey;
 
 public class AES128Encryption implements EncryptionX {
 
@@ -29,7 +29,7 @@ public class AES128Encryption implements EncryptionX {
     public byte[] encrypt(byte[] data, String pass, EncryptionMode encryptionMode) {
         try {
             SecretKey key = generateKeyFromPassword(pass);
-            Cipher cipher = Cipher.getInstance("AES"+encryptionMode.getName());
+            Cipher cipher = Cipher.getInstance("AES" + encryptionMode.getName());
             IvParameterSpec iv = new IvParameterSpec(new byte[SALT_LONG]);
             cipher.init(Cipher.ENCRYPT_MODE, key, iv);
             return cipher.doFinal(data);
@@ -42,7 +42,7 @@ public class AES128Encryption implements EncryptionX {
     public byte[] decrypt(byte[] encryptedData, String pass, EncryptionMode encryptionMode) {
         try {
             SecretKey key = generateKeyFromPassword(pass);
-            Cipher cipher = Cipher.getInstance("AES"+encryptionMode.getName());
+            Cipher cipher = Cipher.getInstance("AES" + encryptionMode.getName());
             IvParameterSpec iv = new IvParameterSpec(new byte[SALT_LONG]);
             cipher.init(Cipher.DECRYPT_MODE, key, iv);
             return cipher.doFinal(encryptedData);
@@ -54,7 +54,7 @@ public class AES128Encryption implements EncryptionX {
 
     private SecretKey generateKeyFromPassword(String pass) throws Exception {
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
-        byte[] key = sha.digest(pass.getBytes("UTF-8"));
+        byte[] key = sha.digest(pass.getBytes(StandardCharsets.UTF_8));
         return new SecretKeySpec(Arrays.copyOf(key, KEY_SIZE_BYTES), "AES");
     }
 }

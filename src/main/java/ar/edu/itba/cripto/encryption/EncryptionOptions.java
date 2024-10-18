@@ -8,11 +8,11 @@ import lombok.Setter;
 @Setter
 public class EncryptionOptions {
 
-    private EncryptionAlgorithm algorithm;
+    private final EncryptionAlgorithm algorithm;
 
-    private EncryptionMode mode;
+    private final EncryptionMode mode;
 
-    private String password;
+    private final String password;
 
     public EncryptionOptions(EncryptionAlgorithm algorithm, EncryptionMode mode, String password) {
         this.algorithm = algorithm;

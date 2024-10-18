@@ -34,9 +34,9 @@ public class BitmapIterator implements Iterator<PixelByte> {
         }
         // Calculate the pixel position
         int byteIndex = (currentY * bitmap.getWidth() + currentX) * 3 + currentColor.index();
+
         // Get the current color component value
-        byte color;
-        color = bitmap.getPixelData()[byteIndex]; // Blue
+        byte color = bitmap.getPixelData()[byteIndex];
 
         currentColor = currentColor.nextColor();
         if (currentColor == Color.BLUE) {
@@ -51,6 +51,7 @@ public class BitmapIterator implements Iterator<PixelByte> {
         lastIndex = byteIndex;
         return new PixelByte(color, currentColor);
     }
+
     // Set a new byte value at the current position
     public void setByte(byte color) {
         bitmap.getPixelData()[lastIndex] = color;

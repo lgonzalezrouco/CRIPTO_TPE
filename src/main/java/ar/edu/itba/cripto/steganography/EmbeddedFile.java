@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class EmbeddedFile {
-    byte [] data;
+    byte[] data;
     String extension;
 
-    public EmbeddedFile(byte [] data, String extension){
+    public EmbeddedFile(byte[] data, String extension) {
         this.data = data;
         this.extension = extension;
     }

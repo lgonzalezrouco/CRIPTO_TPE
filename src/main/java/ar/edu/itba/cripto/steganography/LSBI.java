@@ -2,8 +2,6 @@ package ar.edu.itba.cripto.steganography;
 
 import ar.edu.itba.cripto.utils.Bitmap;
 
-import java.awt.image.BufferedImage;
-
 public class LSBI implements LSB {
 
     @Override
@@ -11,7 +9,12 @@ public class LSBI implements LSB {
     }
 
     @Override
-    public EmbeddedFile extract(Bitmap carrier) {
-        return new EmbeddedFile(new byte[2], ".txt");
+    public int getBitsToHidePerPixel() {
+        return 0;
+    }
+
+    @Override
+    public byte[] extract(Bitmap carrier) {
+        return new byte[0];
     }
 }
