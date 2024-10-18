@@ -31,7 +31,11 @@ public class Bitmap {
 
     public static Bitmap readFromStream(InputStream stream) throws IOException {
         byte[] header = new byte[HEADER_SIZE];
-        stream.read(header);
+        int bytesRead = stream.read(header);
+
+        if (bytesRead != HEADER_SIZE) {
+            throw new IOException("Invalid header size");
+        }
 
         // check no compression
         if (header[29] != 0 || header[30] != 0) {
@@ -41,7 +45,11 @@ public class Bitmap {
         int width = ByteBuffer.wrap(header, 18, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
         int height = ByteBuffer.wrap(header, 22, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
         byte[] pixelData = new byte[width * height * 3];
-        stream.read(pixelData);
+        bytesRead = stream.read(pixelData);
+
+        if (bytesRead != pixelData.length) {
+            throw new IOException("Invalid pixel data size");
+        }
 
         return new Bitmap(width, height, header, pixelData);
     }
