@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class AES256Encryption implements EncryptionX {
 
     private static final int KEY_SIZE_BYTES = 32; // 256 bits
-    private static final int SALT_LONG = 8; // 128 bits
+    private static final int SALT_LONG = 16;
 
     @Getter
     private static final AES256Encryption instance = new AES256Encryption();
@@ -30,7 +30,13 @@ public class AES256Encryption implements EncryptionX {
             SecretKey key = generateKeyFromPassword(pass);
             Cipher cipher = Cipher.getInstance("AES" + encryptionMode.getName());
             IvParameterSpec iv = new IvParameterSpec(new byte[SALT_LONG]);
-            cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+            if(encryptionMode == EncryptionMode.ECB)
+            {
+                cipher.init(Cipher.ENCRYPT_MODE, key);
+            }
+            else{
+                cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+            }
             return cipher.doFinal(data);
         } catch (Exception e) {
             throw new RuntimeException("Error al encriptar", e);
@@ -43,7 +49,12 @@ public class AES256Encryption implements EncryptionX {
             SecretKey key = generateKeyFromPassword(pass);
             Cipher cipher = Cipher.getInstance("AES" + encryptionMode.getName());
             IvParameterSpec iv = new IvParameterSpec(new byte[SALT_LONG]);
-            cipher.init(Cipher.DECRYPT_MODE, key, iv);
+            if (encryptionMode == EncryptionMode.ECB){
+                cipher.init(Cipher.DECRYPT_MODE, key);
+            }
+            else {
+                cipher.init(Cipher.DECRYPT_MODE, key, iv);
+            }
             return cipher.doFinal(encryptedData);
         } catch (Exception e) {
             throw new RuntimeException("Error al desencriptar", e);
