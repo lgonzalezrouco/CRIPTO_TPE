@@ -1,6 +1,6 @@
 package ar.edu.itba.cripto.arguments;
 
-import ar.edu.itba.cripto.encryption.EncryptionAlgorithm;
+import ar.edu.itba.cripto.encryption.EncryptionEnum;
 import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.EncryptionOptions;
 import ar.edu.itba.cripto.steganography.SteganographyType;
@@ -43,11 +43,11 @@ public class Parser {
         String outputFile = cmd.getOptionValue("out");
         SteganographyType steganographyType = SteganographyType.valueOf(cmd.getOptionValue("steg").toUpperCase());
 
-        EncryptionAlgorithm encryptionAlgorithm = EncryptionAlgorithm.fromString(cmd.getOptionValue("a", "aes128"));
+        EncryptionEnum encryptionEnum = EncryptionEnum.fromString(cmd.getOptionValue("a", "aes128"));
         EncryptionMode encryptionMode = EncryptionMode.valueOf(cmd.getOptionValue("m", "cbc").toUpperCase());
 
         EncryptionOptions encryptionOptions = new EncryptionOptions(
-                encryptionAlgorithm,
+                encryptionEnum,
                 encryptionMode,
                 password
         );
@@ -68,8 +68,8 @@ public class Parser {
                 System.err.println("Input file is not required");
                 return false;
             }
-            if (encryptionOptions.getPassword() == null) {
-                if (encryptionOptions.getMode() != null || encryptionOptions.getAlgorithm() != null) {
+            if (encryptionOptions.password() == null) {
+                if (encryptionOptions.mode() != null || encryptionOptions.encryptionEnum() != null) {
                     System.err.println("Password is required");
                     return false;
                 }

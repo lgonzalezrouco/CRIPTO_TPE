@@ -41,7 +41,7 @@ public class Main {
             byte[] dataToEmbed = lsb.getBytesToHide(data, extension);
             // dataToEmbed: size (4) | data | extension
 
-            if (args.encryptionOptions().getPassword() != null) {
+            if (args.encryptionOptions().password() != null) {
                 // dataToEmbed: cipherSize (4) | cipherData
                 // cipherData: size (4) | data | extension
                 try {
@@ -68,7 +68,7 @@ public class Main {
     public static void extract(Arguments args, LSB lsb, Bitmap bitmap) throws IOException {
         byte[] extractedData = lsb.extract(bitmap);
 
-        if (args.encryptionOptions().getPassword() != null) {
+        if (args.encryptionOptions().password() != null) {
             try {
                 extractedData = args.encryptionOptions().decrypt(extractedData);
                 EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(extractedData);

@@ -1,32 +1,64 @@
 package ar.edu.itba.cripto.encryption;
 
-import ar.edu.itba.cripto.encryption.algorithms.AES128Encryption;
-import ar.edu.itba.cripto.encryption.algorithms.AES192Encryption;
-import ar.edu.itba.cripto.encryption.algorithms.AES256Encryption;
-import ar.edu.itba.cripto.encryption.algorithms.DES3Encryption;
-import lombok.Getter;
+import ar.edu.itba.cripto.encryption.exceptions.EncryptionException;
 
-@Getter
-public enum EncryptionAlgorithm {
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Arrays;
 
-    AES128(new AES128Encryption()),
-    AES192(new AES192Encryption()),
-    AES256(new AES256Encryption()),
-    DES3(new DES3Encryption());
+public abstract class EncryptionAlgorithm {
 
-    private final EncryptionX encryptionX;
+    private final String algorithmPrefix;
+    private final int saltLong;
+    private final int keySize;
+    private final String hashAlgorithm;
 
-    EncryptionAlgorithm(EncryptionX encryptionX) {
-        this.encryptionX = encryptionX;
+    public EncryptionAlgorithm(String algorithmPrefix, int saltLong, int keySize, String hashAlgorithm) {
+        this.algorithmPrefix = algorithmPrefix;
+        this.saltLong = saltLong;
+        this.keySize = keySize;
+        this.hashAlgorithm = hashAlgorithm;
     }
 
-    public static EncryptionAlgorithm fromString(String algorithm) {
-        return switch (algorithm) {
-            case "aes128" -> AES128;
-            case "aes192" -> AES192;
-            case "aes256" -> AES256;
-            case "3des" -> DES3;
-            default -> throw new IllegalArgumentException("Invalid algorithm");
-        };
+    public byte[] encrypt(byte[] data, String pass, EncryptionMode encryptionMode) {
+        try {
+            SecretKey key = generateKeyFromPassword(pass);
+            Cipher cipher = Cipher.getInstance(algorithmPrefix + encryptionMode.getName());
+            IvParameterSpec iv = new IvParameterSpec(new byte[saltLong]);
+            if (encryptionMode == EncryptionMode.ECB) {
+                cipher.init(Cipher.ENCRYPT_MODE, key);
+            } else {
+                cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+            }
+            return cipher.doFinal(data);
+        } catch (Exception e) {
+            throw new EncryptionException("Error at encrypting", e);
+        }
+    }
+
+    public byte[] decrypt(byte[] encryptedData, String pass, EncryptionMode encryptionMode) {
+        try {
+            SecretKey key = generateKeyFromPassword(pass);
+            Cipher cipher = Cipher.getInstance(algorithmPrefix + encryptionMode.getName());
+            IvParameterSpec iv = new IvParameterSpec(new byte[saltLong]);
+            if (encryptionMode == EncryptionMode.ECB) {
+                cipher.init(Cipher.DECRYPT_MODE, key);
+            } else {
+                cipher.init(Cipher.DECRYPT_MODE, key, iv);
+            }
+            return cipher.doFinal(encryptedData);
+        } catch (Exception e) {
+            throw new EncryptionException("Error at decrypting", e);
+        }
+    }
+
+    private SecretKey generateKeyFromPassword(String pass) throws Exception {
+        MessageDigest sha = MessageDigest.getInstance(hashAlgorithm);
+        byte[] key = sha.digest(pass.getBytes(StandardCharsets.UTF_8));
+        return new SecretKeySpec(Arrays.copyOf(key, keySize), algorithmPrefix);
     }
 }
