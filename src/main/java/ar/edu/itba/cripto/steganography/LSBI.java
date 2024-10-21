@@ -6,9 +6,7 @@ import ar.edu.itba.cripto.utils.BitmapIterator;
 import ar.edu.itba.cripto.utils.Color;
 import ar.edu.itba.cripto.utils.PixelByte;
 
-import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.Optional;
 
 public class LSBI implements LSB {
 
@@ -25,11 +23,16 @@ public class LSBI implements LSB {
     @Override
     public void hide(Bitmap carrier, byte[] message, String extension) {
         int availablePixels = (int) Math.floor((carrier.getPixelDataSize() / 3.0) * 2.0);
-        if (message.length > availablePixels / 8) {
+        if ((message.length + 4) > availablePixels / 8) {
             throw new MessageToLargeException("Data is too big for carrier");
         }
 
         BitmapIterator iterator = new BitmapIterator(carrier);
+        for (int i = 0; i < 4; i++)
+            if (iterator.hasNext())
+                iterator.next();
+            else
+                throw new MessageToLargeException("Data is too big for carrier");
 
         int byteIndex = 0;
         while (iterator.hasNext() && byteIndex < message.length) {
@@ -46,16 +49,18 @@ public class LSBI implements LSB {
 
         byte[] changedPatterns = new byte[4];
         for (BitPattern pattern : BitPattern.values()) {
-            changedPatterns[pattern.ordinal()] = (byte) (changedBitPattern.get(pattern) > 0 ? 1 : 0);
+            changedPatterns[pattern.ordinal()] = (byte) (changedBitPattern.get(pattern) > 0 ? 0b0000_0001 : 0b0000_0000);
         }
 
-        byte[] newMessage = new byte[message.length + 1];
-
-        newMessage[0] = (byte) (changedPatterns[0] << 3 | changedPatterns[1] << 2 | changedPatterns[2] << 1 | changedPatterns[3]);
-
-        System.arraycopy(message, 0, newMessage, 1, message.length);
-
-        iterator.getBitmap().setPixelData(newMessage);
+        iterator = new BitmapIterator(carrier);
+        for (int i = 0; i < 4; i++) {
+            if (iterator.hasNext()) {
+                iterator.next();
+                iterator.setByte(changedPatterns[i]);
+            } else {
+                throw new MessageToLargeException("Data is too big for carrier");
+            }
+        }
     }
 
     @Override
@@ -92,39 +97,17 @@ public class LSBI implements LSB {
     }
 
     @Override
-    public byte[] extract(Bitmap carrier) {
-        BitmapIterator iterator = new BitmapIterator(carrier);
-
-        int msgSize = size(iterator);
-
-        byte[] message = new byte[msgSize];
-        int byteIndex = 0;
-        while (iterator.hasNext() && byteIndex < msgSize) {
-            Byte pixel = readByte(iterator);
-            message[byteIndex] = Optional.ofNullable(pixel).orElse((byte) 0);
-            byteIndex++;
-        }
-
-        return Arrays.copyOf(message, msgSize);
-    }
-
-    @Override
     public int size(BitmapIterator iterator) {
         checkChangedBitPatterns(iterator);
         return LSB.super.size(iterator);
     }
 
     private void checkChangedBitPatterns(BitmapIterator iterator) {
-        if (iterator.hasNext()) {
-            Byte b = iterator.next().getValue();
+        for (int i = 0; i < 4; i++) {
+            if (iterator.hasNext()) {
+                Byte b = iterator.next().getValue();
 
-            // check the 4 least significant bits
-            // the last significant bit if for the 11, and the forth least significant bit is for 00
-            byte[] changedPatterns = new byte[4];
-            for (int i = 0; i < 4; i++) {
-                changedPatterns[i] = (byte) ((b >> (3 - i)) & 1);
-
-                if (changedPatterns[i] == 1)
+                if (b == 0b0000_0001)
                     changedBitPattern.put(BitPattern.values()[i], 1);
             }
         }
@@ -137,7 +120,7 @@ public class LSBI implements LSB {
 
         while (iterator.hasNext() && bitIndex >= 0) {
             PixelByte pixel = iterator.next();
-            if (!pixel.getColor().equals(Color.RED)) {
+            if (pixel.getColor() != Color.RED) {
                 BitPattern bitPattern = BitPattern.getBitPattern(pixel.getValue());
                 int changed = changedBitPattern.get(bitPattern);
                 if (changed > 0)

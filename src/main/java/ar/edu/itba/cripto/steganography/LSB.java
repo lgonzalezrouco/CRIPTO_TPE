@@ -6,13 +6,27 @@ import ar.edu.itba.cripto.utils.BitmapIterator;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Optional;
 
 public interface LSB {
 
     void hide(Bitmap carrier, byte[] message, String extension) throws MessageToLargeException;
 
-    byte[] extract(Bitmap carrier);
+    default byte[] extract(Bitmap carrier) {
+        BitmapIterator iterator = new BitmapIterator(carrier);
+        int msgSize = size(iterator);
+
+        byte[] extracted = new byte[msgSize];
+        int byteIndex = 0;
+        Byte pixel;
+        while ((pixel = readByte(iterator)) != null && byteIndex < msgSize) {
+            extracted[byteIndex] = pixel;
+            byteIndex++;
+        }
+
+        return Arrays.copyOf(extracted, msgSize);
+    }
 
     Byte readByte(BitmapIterator iterator);
 

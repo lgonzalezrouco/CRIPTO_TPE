@@ -5,8 +5,6 @@ import ar.edu.itba.cripto.utils.Bitmap;
 import ar.edu.itba.cripto.utils.BitmapIterator;
 import ar.edu.itba.cripto.utils.PixelByte;
 
-import java.util.Arrays;
-
 public abstract class LSBX implements LSB {
 
     protected final int bitsToHide;
@@ -44,22 +42,6 @@ public abstract class LSBX implements LSB {
 
             iterator.setByte(pixelValue);
         }
-    }
-
-    @Override
-    public byte[] extract(Bitmap carrier) {
-        BitmapIterator iterator = new BitmapIterator(carrier);
-        int msgSize = size(iterator);
-
-        byte[] extracted = new byte[msgSize];
-        int byteIndex = 0;
-        Byte pixel;
-        while ((pixel = readByte(iterator)) != null && byteIndex < msgSize) {
-            extracted[byteIndex] = pixel;
-            byteIndex++;
-        }
-
-        return Arrays.copyOf(extracted, byteIndex); // resize to byteIndex
     }
 
     @Override
