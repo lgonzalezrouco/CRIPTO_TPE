@@ -2,6 +2,7 @@ package ar.edu.itba.cripto.utils;
 
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -14,7 +15,8 @@ public class Bitmap {
     private final int width;
     private final int height;
     private final byte[] header;
-    private final byte[] pixelData;
+    @Setter
+    private byte[] pixelData;
 
     public Bitmap(int width, int height, byte[] header, byte[] data) {
         this.width = width;

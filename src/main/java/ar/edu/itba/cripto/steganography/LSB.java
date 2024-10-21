@@ -2,15 +2,21 @@ package ar.edu.itba.cripto.steganography;
 
 import ar.edu.itba.cripto.steganography.exceptions.MessageToLargeException;
 import ar.edu.itba.cripto.utils.Bitmap;
+import ar.edu.itba.cripto.utils.BitmapIterator;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 public interface LSB {
 
     void hide(Bitmap carrier, byte[] message, String extension) throws MessageToLargeException;
 
     byte[] extract(Bitmap carrier);
+
+    Byte readByte(BitmapIterator iterator);
+
+    void writeByte(byte b, BitmapIterator iterator);
 
     default EmbeddedFile parseToEmbeddedFile(byte[] dataToParse) {
         // dataToParse: size (4) | data | extension
@@ -56,5 +62,20 @@ public interface LSB {
         buffer.put(sizeBytes);
         buffer.put(message);
         return buffer.array();
+    }
+
+    default int size(BitmapIterator iterator) {
+        int byteIndex = 0;
+        byte[] sizeByte = new byte[4];
+        // extract first 4 bytes
+        while (iterator.hasNext()) {
+            Byte pixel = readByte(iterator);
+            sizeByte[byteIndex] = Optional.ofNullable(pixel).orElse((byte) 0);
+            byteIndex++;
+            if (byteIndex == 4) {
+                return ByteBuffer.wrap(sizeByte).getInt();
+            }
+        }
+        throw new IllegalArgumentException("No size found");
     }
 }

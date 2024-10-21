@@ -53,8 +53,12 @@ public class BitmapIterator implements Iterator<PixelByte> {
     }
 
     // Set a new byte value at the current position
-    public void setByte(byte color) {
-        bitmap.getPixelData()[lastIndex] = color;
+    public int setByte(byte pixel) {
+        if (bitmap.getPixelData()[lastIndex] == pixel) {
+            return -1;
+        }
+        bitmap.getPixelData()[lastIndex] = pixel;
+        return 1;
     }
 
 
