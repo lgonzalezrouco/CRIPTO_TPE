@@ -20,7 +20,7 @@ public class Parser {
         options.addRequiredOption("p", "p", true, "Carrier file");
         options.addRequiredOption("out", "out", true, "Output file");
         options.addRequiredOption("steg", "steg", true, "Steganography algorithm");
-        options.addOption("pwd", "pwd", true, "Encryption key");
+        options.addOption("pass", "pass", true, "Encryption key");
         options.addOption("a", "a", true, "Encryption algorithm");
         options.addOption("m", "m", true, "Encryption mode");
     }
@@ -38,7 +38,7 @@ public class Parser {
     private Optional<Arguments> getArguments(CommandLine cmd) {
         Actions action = cmd.hasOption("embed") ? Actions.EMBED : Actions.EXTRACT;
         String inputFile = cmd.getOptionValue("in");
-        String password = cmd.getOptionValue("pwd");
+        String password = cmd.getOptionValue("pass");
         String carrierFile = cmd.getOptionValue("p");
         String outputFile = cmd.getOptionValue("out");
         SteganographyType steganographyType = SteganographyType.valueOf(cmd.getOptionValue("steg").toUpperCase());

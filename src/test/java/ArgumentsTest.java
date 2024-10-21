@@ -16,7 +16,7 @@ public class ArgumentsTest {
     @Test
     public void extractTest() {
         //–extract –p imagenmas1.bmp -out mensaje1 –steg LSBI –a 3des –m cbc -pass oculto
-        String[] args = {"-extract", "-p", "imagenmas1.bmp", "-out", "mensaje1", "-steg", "LSBI", "-a", "3des", "-m", "cbc", "-pwd", "oculto"};
+        String[] args = {"-extract", "-p", "imagenmas1.bmp", "-out", "mensaje1", "-steg", "LSBI", "-a", "3des", "-m", "cbc", "-pass", "oculto"};
         Optional<Arguments> arguments = new Parser().parse(args);
         assertTrue(arguments.isPresent());
     }
@@ -32,7 +32,7 @@ public class ArgumentsTest {
     @Test
     public void embedTest() {
         // -embed –in mensaje1.txt –p imagen1.bmp -out imagenmas1.bmp –steg LSBI –a 3des –m cbc -pass oculto
-        String[] args = {"-embed", "-in", "mensaje1.txt", "-p", "imagen1.bmp", "-out", "imagenmas1.bmp", "-steg", "LSBI", "-a", "3des", "-m", "cbc", "-pwd", "oculto"};
+        String[] args = {"-embed", "-in", "mensaje1.txt", "-p", "imagen1.bmp", "-out", "imagenmas1.bmp", "-steg", "LSBI", "-a", "3des", "-m", "cbc", "-pass", "oculto"};
         Optional<Arguments> arguments = new Parser().parse(args);
         assertTrue(arguments.isPresent());
     }
