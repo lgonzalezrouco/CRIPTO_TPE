@@ -30,11 +30,9 @@ public class AES256Encryption implements EncryptionX {
             SecretKey key = generateKeyFromPassword(pass);
             Cipher cipher = Cipher.getInstance("AES" + encryptionMode.getName());
             IvParameterSpec iv = new IvParameterSpec(new byte[SALT_LONG]);
-            if(encryptionMode == EncryptionMode.ECB)
-            {
+            if (encryptionMode == EncryptionMode.ECB) {
                 cipher.init(Cipher.ENCRYPT_MODE, key);
-            }
-            else{
+            } else {
                 cipher.init(Cipher.ENCRYPT_MODE, key, iv);
             }
             return cipher.doFinal(data);
@@ -49,10 +47,9 @@ public class AES256Encryption implements EncryptionX {
             SecretKey key = generateKeyFromPassword(pass);
             Cipher cipher = Cipher.getInstance("AES" + encryptionMode.getName());
             IvParameterSpec iv = new IvParameterSpec(new byte[SALT_LONG]);
-            if (encryptionMode == EncryptionMode.ECB){
+            if (encryptionMode == EncryptionMode.ECB) {
                 cipher.init(Cipher.DECRYPT_MODE, key);
-            }
-            else {
+            } else {
                 cipher.init(Cipher.DECRYPT_MODE, key, iv);
             }
             return cipher.doFinal(encryptedData);

@@ -1,6 +1,6 @@
 package ar.edu.itba.cripto.utils;
 
-public enum Color  {
+public enum Color {
     BLUE(0), GREEN(1), RED(2);
 
     private final int index;

@@ -19,7 +19,8 @@ public class DES3Encryption implements EncryptionX {
     @Getter
     private static final DES3Encryption instance = new DES3Encryption();
 
-    public DES3Encryption() { }
+    public DES3Encryption() {
+    }
 
     @Override
     public byte[] encrypt(byte[] data, String pass, EncryptionMode encryptionMode) {
