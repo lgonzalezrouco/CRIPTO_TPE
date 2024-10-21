@@ -67,7 +67,6 @@ public class LSBI implements LSB {
             if (pixel.getColor() != Color.RED) {
                 BitPattern bitPattern = BitPattern.getBitPattern(pixel.getValue());
 
-
                 byte bit = (byte) ((b >> bitIndex) & 1);
                 pixelValue = (byte) ((pixelValue & ~1) | bit);
                 bitIndex--;
@@ -95,7 +94,6 @@ public class LSBI implements LSB {
     @Override
     public byte[] extract(Bitmap carrier) {
         BitmapIterator iterator = new BitmapIterator(carrier);
-        checkChangedBitPatterns(iterator);
 
         int msgSize = size(iterator);
 
@@ -108,6 +106,12 @@ public class LSBI implements LSB {
         }
 
         return Arrays.copyOf(message, msgSize);
+    }
+
+    @Override
+    public int size(BitmapIterator iterator) {
+        checkChangedBitPatterns(iterator);
+        return LSB.super.size(iterator);
     }
 
     private void checkChangedBitPatterns(BitmapIterator iterator) {
