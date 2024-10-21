@@ -1,5 +1,4 @@
 import ar.edu.itba.cripto.encryption.EncryptionMode;
-import ar.edu.itba.cripto.encryption.algorithms.AES128Encryption;
 import ar.edu.itba.cripto.encryption.algorithms.AES192Encryption;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -7,7 +6,7 @@ import org.junit.jupiter.api.Assertions;
 public class AES192EncryptionTest {
 
     private final String message = "This is a test message";
-    private final String pass="password";
+    private final String pass = "password";
 
     @Test
     public void AES192EncryptionCBCModeTest() {
@@ -26,6 +25,7 @@ public class AES192EncryptionTest {
         byte[] decrypted = encryption.decrypt(encrypted, pass, EncryptionMode.CFB);
         Assertions.assertEquals(message, new String(decrypted));
     }
+
     @Test
     public void AES192EncryptionEBCModeTest() {
         AES192Encryption encryption = new AES192Encryption();
