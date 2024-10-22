@@ -83,6 +83,46 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo file="stegobmp">
+                                    #!/bin/bash
+                                    cd "$(dirname "$0")"
+                                    JAR_FILE="target/${project.build.finalName}.jar"
+                                    if [ ! -f "$JAR_FILE" ]; then
+                                    echo "Error: JAR file not found at $JAR_FILE"
+                                    exit 1
+                                    fi
+                                    java -jar "$JAR_FILE" "$@"
+                                </echo>
+                                <chmod file="stegobmp" perm="755"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>ar.edu.itba.cripto.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
