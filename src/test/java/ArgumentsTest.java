@@ -30,9 +30,25 @@ public class ArgumentsTest {
     }
 
     @Test
+    public void extractWithInputFileInvalidTest() {
+        //–extract –p imagenmas1.bmp -out mensaje1 –steg LSBI –a 3des –m cbc -pass oculto
+        String[] args = {"-extract", "-in", "input1.bmp", "-p", "imagenmas1.bmp", "-out", "mensaje1", "-steg", "LSBI"};
+        Optional<Arguments> arguments = new Parser().parse(args);
+        assertFalse(arguments.isPresent());
+    }
+
+    @Test
     public void embedTest() {
         // -embed –in mensaje1.txt –p imagen1.bmp -out imagenmas1.bmp –steg LSBI –a 3des –m cbc -pass oculto
         String[] args = {"-embed", "-in", "mensaje1.txt", "-p", "imagen1.bmp", "-out", "imagenmas1.bmp", "-steg", "LSBI", "-a", "3des", "-m", "cbc", "-pass", "oculto"};
+        Optional<Arguments> arguments = new Parser().parse(args);
+        assertTrue(arguments.isPresent());
+    }
+
+    @Test
+    public void embedNoPassTest() {
+        // -embed –in mensaje1.txt –p imagen1.bmp -out imagenmas1.bmp –steg LSBI –a 3des –m cbc -pass oculto
+        String[] args = {"-embed", "-in", "mensaje1.txt", "-p", "imagen1.bmp", "-out", "imagenmas1.bmp", "-steg", "LSBI"};
         Optional<Arguments> arguments = new Parser().parse(args);
         assertTrue(arguments.isPresent());
     }

@@ -30,12 +30,11 @@ public class Parser {
             return getArguments(parser.parse(options, args, true));
         } catch (ParseException e) {
             System.err.println(e.getMessage());
-            System.err.println("Error parsing command line arguments");
             return Optional.empty();
         }
     }
 
-    private Optional<Arguments> getArguments(CommandLine cmd) {
+    private Optional<Arguments> getArguments(CommandLine cmd) throws ParseException {
         Actions action = cmd.hasOption("embed") ? Actions.EMBED : Actions.EXTRACT;
         String inputFile = cmd.getOptionValue("in");
         String password = cmd.getOptionValue("pass");
@@ -52,9 +51,16 @@ public class Parser {
                 password
         );
 
+        if ((cmd.hasOption("a") || cmd.hasOption("m")) && password == null) {
+            throw new ParseException("Password is required");
+        }
+
         Arguments args = new Arguments(action, inputFile, carrierFile, outputFile, steganographyType, encryptionOptions);
 
-        return args.isValid() ? Optional.of(args) : Optional.empty();
+        if (args.isValid())
+            return Optional.of(args);
+
+        throw new ParseException("Invalid arguments");
     }
 
     public record Arguments(Actions action, String inputFile, String carrierFile, String outputFile,
@@ -67,12 +73,6 @@ public class Parser {
             } else if (action == Actions.EXTRACT && inputFile != null) {
                 System.err.println("Input file is not required");
                 return false;
-            }
-            if (encryptionOptions.password() == null) {
-                if (encryptionOptions.mode() != null || encryptionOptions.encryptionEnum() != null) {
-                    System.err.println("Password is required");
-                    return false;
-                }
             }
 
             return true;
