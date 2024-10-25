@@ -67,15 +67,18 @@ public class Main {
     }
 
     public static void extract(Arguments args, LSB lsb, Bitmap bitmap) throws IOException {
-        byte[] extractedData = lsb.extract(bitmap);
+        byte[] extractedData;
 
         if (args.encryptionOptions().password() != null) {
             try {
+                extractedData = lsb.extract(bitmap);
                 extractedData = Arrays.copyOfRange(extractedData, 4, extractedData.length);
                 extractedData = args.encryptionOptions().decrypt(extractedData);
             } catch (Exception e) {
                 throw new RuntimeException("Error decrypting data", e);
             }
+        } else {
+            extractedData = lsb.extractWithExtension(bitmap);
         }
 
         EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(extractedData);

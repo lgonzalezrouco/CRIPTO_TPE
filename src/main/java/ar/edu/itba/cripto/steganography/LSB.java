@@ -6,31 +6,66 @@ import ar.edu.itba.cripto.utils.BitmapIterator;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public interface LSB {
 
     void hide(Bitmap carrier, byte[] message, String extension) throws MessageToLargeException;
 
+    default byte[] extractWithExtension(Bitmap carrier) {
+        BitmapIterator iterator = new BitmapIterator(carrier);
+        byte[] extracted = extractMessage(iterator);
+        byte[] extensionBytes = extractExtension(iterator);
+
+        ByteBuffer buffer = ByteBuffer.allocate(4 + extracted.length + extensionBytes.length);
+        buffer.putInt(extracted.length);
+        buffer.put(extracted);
+        buffer.put(extensionBytes);
+
+        return buffer.array();
+    }
+
     default byte[] extract(Bitmap carrier) {
         BitmapIterator iterator = new BitmapIterator(carrier);
-        int msgSize = size(iterator);
+        byte[] extracted = extractMessage(iterator);
 
+        ByteBuffer buffer = ByteBuffer.allocate(4 + extracted.length);
+        buffer.putInt(extracted.length);
+        buffer.put(extracted);
+
+        return buffer.array();
+    }
+
+    private byte[] extractMessage(BitmapIterator iterator) {
+        int msgSize = size(iterator);
         byte[] extracted = new byte[msgSize];
         int byteIndex = 0;
         Byte pixel;
+
         while ((pixel = readByte(iterator)) != null && byteIndex < msgSize) {
             extracted[byteIndex] = pixel;
             byteIndex++;
         }
 
-        // TODO: falta agarrar la extension
+        return extracted;
+    }
 
-        ByteBuffer buffer = ByteBuffer.allocate(4 + msgSize);
-        buffer.putInt(msgSize);
-        buffer.put(extracted);
+    private byte[] extractExtension(BitmapIterator iterator) {
+        List<Byte> extension = new ArrayList<>();
+        Byte pixel;
 
-        return buffer.array();
+        while ((pixel = readByte(iterator)) != null && pixel != '\0') {
+            extension.add(pixel);
+        }
+
+        byte[] extensionBytes = new byte[extension.size()];
+        for (int i = 0; i < extension.size(); i++) {
+            extensionBytes[i] = extension.get(i);
+        }
+
+        return extensionBytes;
     }
 
     Byte readByte(BitmapIterator iterator);

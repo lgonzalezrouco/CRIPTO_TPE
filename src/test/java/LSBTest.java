@@ -62,9 +62,9 @@ class LSBTest {
         byte[] dataToEmbed = lsb.getBytesToHide(DATA, EXTENSION);
         lsb.hide(bitmap, dataToEmbed, EXTENSION);
         bitmap.saveToFile(new File("src/test/resources/result1.bmp"));
-        byte[] extracted = lsb.extract(bitmap);
+        byte[] extracted = lsb.extractWithExtension(bitmap);
 
-        Assertions.assertArrayEquals(DATA, extracted);
+        Assertions.assertArrayEquals(dataToEmbed, extracted);
     }
 
     @Test
