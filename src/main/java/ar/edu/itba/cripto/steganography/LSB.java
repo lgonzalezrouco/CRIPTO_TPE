@@ -44,7 +44,7 @@ public interface LSB {
         int byteIndex = 0;
         Byte pixel;
 
-        while ((pixel = readByte(iterator)) != null && byteIndex < msgSize) {
+        while (byteIndex < msgSize && (pixel = readByte(iterator)) != null) {
             extracted[byteIndex] = pixel;
             byteIndex++;
         }
@@ -59,6 +59,8 @@ public interface LSB {
         while ((pixel = readByte(iterator)) != null && pixel != '\0') {
             extension.add(pixel);
         }
+
+        extension.add((byte) '\0');
 
         byte[] extensionBytes = new byte[extension.size()];
         for (int i = 0; i < extension.size(); i++) {
