@@ -82,8 +82,8 @@ public interface LSB {
 
         byte[] message = new byte[size];
         buffer.get(message);
-
-        byte[] extensionBytes = new byte[dataToParse.length - 4 - size];
+        // dataToParse.length -SizeBytes - size - 1 (extension null terminated)
+        byte[] extensionBytes = new byte[dataToParse.length - 4 - size -1];
         buffer.get(extensionBytes);
         String extension = new String(extensionBytes, StandardCharsets.UTF_8);
 

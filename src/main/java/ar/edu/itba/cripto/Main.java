@@ -72,8 +72,8 @@ public class Main {
         if (args.encryptionOptions().password() != null) {
             try {
                 extractedData = lsb.extract(bitmap);
-                extractedData = Arrays.copyOfRange(extractedData, 4, extractedData.length);
-                extractedData = args.encryptionOptions().decrypt(extractedData);
+                byte[] extractedData_ = Arrays.copyOfRange(extractedData, 4, extractedData.length);
+                extractedData_ = args.encryptionOptions().decrypt(extractedData_);
             } catch (Exception e) {
                 throw new RuntimeException("Error decrypting data", e);
             }
@@ -82,7 +82,6 @@ public class Main {
         }
 
         EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(extractedData);
-
         try (OutputStream stream = new FileOutputStream(args.outputFile() + embeddedFile.getExtension())) {
             stream.write(embeddedFile.getData());
         }
