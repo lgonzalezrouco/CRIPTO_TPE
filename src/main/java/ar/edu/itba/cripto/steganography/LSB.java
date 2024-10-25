@@ -6,7 +6,6 @@ import ar.edu.itba.cripto.utils.BitmapIterator;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Optional;
 
 public interface LSB {
@@ -25,7 +24,13 @@ public interface LSB {
             byteIndex++;
         }
 
-        return Arrays.copyOf(extracted, msgSize);
+        // TODO: falta agarrar la extension
+
+        ByteBuffer buffer = ByteBuffer.allocate(4 + msgSize);
+        buffer.putInt(msgSize);
+        buffer.put(extracted);
+
+        return buffer.array();
     }
 
     Byte readByte(BitmapIterator iterator);

@@ -10,6 +10,7 @@ import ar.edu.itba.cripto.steganography.exceptions.MessageToLargeException;
 import ar.edu.itba.cripto.utils.Bitmap;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class Main {
@@ -70,16 +71,17 @@ public class Main {
 
         if (args.encryptionOptions().password() != null) {
             try {
+                extractedData = Arrays.copyOfRange(extractedData, 4, extractedData.length);
                 extractedData = args.encryptionOptions().decrypt(extractedData);
-                EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(extractedData);
-                extractedData = embeddedFile.getData();
             } catch (Exception e) {
                 throw new RuntimeException("Error decrypting data", e);
             }
         }
 
-        try (OutputStream stream = new FileOutputStream(args.outputFile())) {
-            stream.write(extractedData);
+        EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(extractedData);
+
+        try (OutputStream stream = new FileOutputStream(args.outputFile() + embeddedFile.getExtension())) {
+            stream.write(embeddedFile.getData());
         }
     }
 }
