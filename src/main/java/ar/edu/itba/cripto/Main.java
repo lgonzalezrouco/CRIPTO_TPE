@@ -72,8 +72,8 @@ public class Main {
         if (args.encryptionOptions().password() != null) {
             try {
                 extractedData = lsb.extract(bitmap);
-                byte[] extractedData_ = Arrays.copyOfRange(extractedData, 4, extractedData.length);
-                extractedData_ = args.encryptionOptions().decrypt(extractedData_);
+                extractedData = Arrays.copyOfRange(extractedData, 4, extractedData.length);
+                extractedData = args.encryptionOptions().decrypt(extractedData);
             } catch (Exception e) {
                 throw new RuntimeException("Error decrypting data", e);
             }
