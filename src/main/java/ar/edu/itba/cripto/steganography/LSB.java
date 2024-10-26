@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public interface LSB {
+public abstract class LSB {
 
-    void hide(Bitmap carrier, byte[] message, String extension) throws MessageToLargeException;
+    public abstract void hide(Bitmap carrier, byte[] message, String extension) throws MessageToLargeException;
 
-    default byte[] extractWithExtension(Bitmap carrier) {
+    public byte[] extractWithExtension(Bitmap carrier) {
         BitmapIterator iterator = new BitmapIterator(carrier);
         byte[] extracted = extractMessage(iterator);
         byte[] extensionBytes = extractExtension(iterator);
@@ -27,7 +27,7 @@ public interface LSB {
         return buffer.array();
     }
 
-    default byte[] extract(Bitmap carrier) {
+    public byte[] extract(Bitmap carrier) {
         BitmapIterator iterator = new BitmapIterator(carrier);
         byte[] extracted = extractMessage(iterator);
 
@@ -70,11 +70,11 @@ public interface LSB {
         return extensionBytes;
     }
 
-    Byte readByte(BitmapIterator iterator);
+    public abstract Byte readByte(BitmapIterator iterator);
 
-    void writeByte(byte b, BitmapIterator iterator);
+    public abstract void writeByte(byte b, BitmapIterator iterator);
 
-    default EmbeddedFile parseToEmbeddedFile(byte[] dataToParse) {
+    public EmbeddedFile parseToEmbeddedFile(byte[] dataToParse) {
         // dataToParse: size (4) | data | extension
         ByteBuffer buffer = ByteBuffer.wrap(dataToParse);
 
@@ -83,14 +83,14 @@ public interface LSB {
         byte[] message = new byte[size];
         buffer.get(message);
         // dataToParse.length -SizeBytes - size - 1 (extension null terminated)
-        byte[] extensionBytes = new byte[dataToParse.length - 4 - size -1];
+        byte[] extensionBytes = new byte[dataToParse.length - 4 - size - 1];
         buffer.get(extensionBytes);
         String extension = new String(extensionBytes, StandardCharsets.UTF_8);
 
         return new EmbeddedFile(message, extension);
     }
 
-    default byte[] getBytesToHide(byte[] message, String extension) {
+    public byte[] getBytesToHide(byte[] message, String extension) {
         if (!extension.startsWith("."))
             throw new IllegalArgumentException("The extension must start with a '.'");
 
@@ -110,7 +110,7 @@ public interface LSB {
         return buffer.array();
     }
 
-    default byte[] getBytesToHide(byte[] message) {
+    public byte[] getEncryptedBytesToHide(byte[] message) {
         // Turn the message size into 4 bytes (big-endian)
         byte[] sizeBytes = ByteBuffer.allocate(4).putInt(message.length).array();
 
@@ -120,7 +120,7 @@ public interface LSB {
         return buffer.array();
     }
 
-    default int size(BitmapIterator iterator) {
+    public int size(BitmapIterator iterator) {
         int byteIndex = 0;
         byte[] sizeByte = new byte[4];
         // extract first 4 bytes

@@ -8,7 +8,7 @@ import ar.edu.itba.cripto.utils.PixelByte;
 
 import java.util.EnumMap;
 
-public class LSBI implements LSB {
+public class LSBI extends LSB {
 
     // if the integer value is greater than 0, then there are more changed bits than unchanged bits
     private final EnumMap<BitPattern, Integer> changedBitPattern = new EnumMap<>(BitPattern.class);
@@ -28,11 +28,7 @@ public class LSBI implements LSB {
         }
 
         BitmapIterator iterator = new BitmapIterator(carrier);
-        for (int i = 0; i < 4; i++)
-            if (iterator.hasNext())
-                iterator.next();
-            else
-                throw new MessageToLargeException("Data is too big for carrier");
+        stepForward(iterator);
 
         int byteIndex = 0;
         while (iterator.hasNext() && byteIndex < message.length) {
@@ -42,6 +38,7 @@ public class LSBI implements LSB {
 
         iterator = new BitmapIterator(carrier);
         byteIndex = 0;
+        stepForward(iterator);
         while (iterator.hasNext() && byteIndex < message.length) {
             checkByte(iterator);
             byteIndex++;
@@ -66,11 +63,12 @@ public class LSBI implements LSB {
     @Override
     public void writeByte(byte b, BitmapIterator iterator) {
         int bitIndex = 7;
-        while (iterator.hasNext() && bitIndex >= 0) {
+        while (bitIndex >= 0 && iterator.hasNext()) {
             PixelByte pixel = iterator.next();
             byte pixelValue = pixel.getValue();
+
             if (pixel.getColor() != Color.RED) {
-                BitPattern bitPattern = BitPattern.getBitPattern(pixel.getValue());
+                BitPattern bitPattern = BitPattern.getBitPattern(pixelValue);
 
                 byte bit = (byte) ((b >> bitIndex) & 1);
                 pixelValue = (byte) ((pixelValue & ~1) | bit);
@@ -96,10 +94,18 @@ public class LSBI implements LSB {
         }
     }
 
+    private void stepForward(BitmapIterator iterator) {
+        for (int i = 0; i < 4; i++) {
+            if (!iterator.hasNext())
+                throw new MessageToLargeException("Data is too big for carrier");
+            iterator.next();
+        }
+    }
+
     @Override
     public int size(BitmapIterator iterator) {
         checkChangedBitPatterns(iterator);
-        return LSB.super.size(iterator);
+        return super.size(iterator);
     }
 
     private void checkChangedBitPatterns(BitmapIterator iterator) {
@@ -120,13 +126,13 @@ public class LSBI implements LSB {
 
         while (iterator.hasNext() && bitIndex >= 0) {
             PixelByte pixel = iterator.next();
+            byte pixelValue = pixel.getValue();
+
             if (pixel.getColor() != Color.RED) {
-                BitPattern bitPattern = BitPattern.getBitPattern(pixel.getValue());
+                BitPattern bitPattern = BitPattern.getBitPattern(pixelValue);
                 int changed = changedBitPattern.get(bitPattern);
                 if (changed > 0)
-                    iterator.setByte((byte) (pixel.getValue() ^ 1));
-
-                byte pixelValue = pixel.getValue();
+                    pixelValue = (byte) (pixelValue ^ 1);
 
                 byte bit = (byte) (pixelValue & 1);
                 currentByte |= (bit << bitIndex);

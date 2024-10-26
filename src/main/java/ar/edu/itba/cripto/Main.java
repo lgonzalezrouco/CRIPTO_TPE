@@ -50,7 +50,7 @@ public class Main {
                 } catch (EncryptionException e) {
                     throw new RuntimeException("Error encrypting data", e);
                 }
-                dataToEmbed = lsb.getBytesToHide(dataToEmbed);
+                dataToEmbed = lsb.getEncryptedBytesToHide(dataToEmbed);
             }
 
             try {

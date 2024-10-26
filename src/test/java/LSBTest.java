@@ -28,7 +28,7 @@ class LSBTest {
     @BeforeEach
     public void setUp() throws IOException {
         bitmap = Bitmap.loadFile(new File("src/main/resources/ejemplo2024/lado.bmp"));
-//        bitmap = Bitmap.loadFile(new File("src/test/resources/sample1.bmp"));
+        // bitmap = Bitmap.loadFile(new File("src/test/resources/sample1.bmp"));
 
     }
 
@@ -91,7 +91,7 @@ class LSBTest {
 
         byte[] dataToEmbed = lsb.getBytesToHide(DATA, EXTENSION);
         byte[] encryptedData = ENCRYPTION_OPTIONS.encrypt(dataToEmbed);
-        encryptedData = lsb.getBytesToHide(encryptedData);
+        encryptedData = lsb.getEncryptedBytesToHide(encryptedData);
 
         lsb.hide(bitmap, encryptedData, EXTENSION);
         bitmap.saveToFile(new File("src/test/resources/result1.bmp"));
@@ -109,7 +109,7 @@ class LSBTest {
 
         byte[] dataToEmbed = lsb.getBytesToHide(DATA, EXTENSION);
         byte[] encryptedData = ENCRYPTION_OPTIONS.encrypt(dataToEmbed);
-        encryptedData = lsb.getBytesToHide(encryptedData);
+        encryptedData = lsb.getEncryptedBytesToHide(encryptedData);
 
         lsb.hide(bitmap, encryptedData, EXTENSION);
         bitmap.saveToFile(new File("src/test/resources/result1.bmp"));
@@ -127,7 +127,7 @@ class LSBTest {
 
         byte[] dataToEmbed = lsb.getBytesToHide(DATA, EXTENSION);
         byte[] encryptedData = ENCRYPTION_OPTIONS.encrypt(dataToEmbed);
-        encryptedData = lsb.getBytesToHide(encryptedData);
+        encryptedData = lsb.getEncryptedBytesToHide(encryptedData);
 
         lsb.hide(bitmap, encryptedData, EXTENSION);
         bitmap.saveToFile(new File("src/test/resources/result1.bmp"));
@@ -138,7 +138,6 @@ class LSBTest {
 
         Assertions.assertArrayEquals(dataToEmbed, extracted);
     }
-
 
 
 }
