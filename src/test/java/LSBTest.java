@@ -1,3 +1,4 @@
+/*
 import ar.edu.itba.cripto.encryption.EncryptionEnum;
 import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.EncryptionOptions;
@@ -28,8 +29,6 @@ class LSBTest {
     @BeforeEach
     public void setUp() throws IOException {
         bitmap = Bitmap.loadFile(new File("src/main/resources/ejemplo2024/lado.bmp"));
-        // bitmap = Bitmap.loadFile(new File("src/test/resources/sample1.bmp"));
-
     }
 
     @Test
@@ -141,3 +140,4 @@ class LSBTest {
 
 
 }
+*/

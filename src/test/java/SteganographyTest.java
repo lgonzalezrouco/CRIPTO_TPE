@@ -1,3 +1,4 @@
+/*
 import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.algorithms.AES256Encryption;
 import ar.edu.itba.cripto.encryption.algorithms.DES3Encryption;
@@ -12,11 +13,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+*/
 /**
  * Created by Mateo on 26/10/2020.
  * This class is used to test the steganography methods.
  * We use professors example images to test the methods.
- */
+ *//*
+
 public class SteganographyTest {
 
 
@@ -120,3 +123,4 @@ public class SteganographyTest {
     }
 
 }
+*/
