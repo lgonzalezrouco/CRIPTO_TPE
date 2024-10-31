@@ -36,7 +36,7 @@ public class LSBI extends LSB {
             byteIndex++;
         }
 
-        iterator = new BitmapIterator(carrier);
+        iterator.reset();
         byteIndex = 0;
         stepForward(iterator);
         while (iterator.hasNext() && byteIndex < message.length) {
@@ -46,14 +46,15 @@ public class LSBI extends LSB {
 
         byte[] changedPatterns = new byte[4];
         for (BitPattern pattern : BitPattern.values()) {
-            changedPatterns[pattern.ordinal()] = (byte) (changedBitPattern.get(pattern) > 0 ? 0b0000_0001 : 0b0000_0000);
+            changedPatterns[pattern.ordinal()] = (byte) (changedBitPattern.get(pattern) > 0 ? 0x1 : 0x0);
         }
 
-        iterator = new BitmapIterator(carrier);
+        iterator.reset();
         for (int i = 0; i < 4; i++) {
             if (iterator.hasNext()) {
-                iterator.next();
-                iterator.setByte(changedPatterns[i]);
+                PixelByte pixelByte = iterator.next();
+                byte patternByte = (byte) ((pixelByte.getValue() & ~1) | changedPatterns[i]);
+                iterator.setByte(patternByte);
             } else {
                 throw new MessageToLargeException("Data is too big for carrier");
             }
@@ -74,6 +75,8 @@ public class LSBI extends LSB {
                 pixelValue = (byte) ((pixelValue & ~1) | bit);
                 bitIndex--;
 
+                System.out.println("Write pixel value: " + pixelValue);
+
                 int changed = iterator.setByte(pixelValue);
                 changedBitPattern.computeIfPresent(bitPattern, (k, v) -> v + changed);
             }
@@ -81,15 +84,20 @@ public class LSBI extends LSB {
     }
 
     private void checkByte(BitmapIterator iterator) {
-        if (!iterator.hasNext())
-            return;
+        int bitIndex = 7;
+        while (bitIndex >= 0 && iterator.hasNext()) {
+            PixelByte pixel = iterator.next();
+            byte pixelValue = pixel.getValue();
 
-        PixelByte pixel = iterator.next();
-        if (pixel.getColor() != Color.RED) {
-            BitPattern bitPattern = BitPattern.getBitPattern(pixel.getValue());
-            int changed = changedBitPattern.get(bitPattern);
-            if (changed > 0) {
-                iterator.setByte((byte) (pixel.getValue() ^ 1));
+            if (pixel.getColor() != Color.RED) {
+                BitPattern bitPattern = BitPattern.getBitPattern(pixelValue);
+                int changed = changedBitPattern.get(bitPattern);
+
+                if (changed > 0) {
+                    iterator.setByte((byte) (pixel.getValue() ^ 1));
+                }
+
+                bitIndex--;
             }
         }
     }
@@ -113,8 +121,10 @@ public class LSBI extends LSB {
             if (iterator.hasNext()) {
                 Byte b = iterator.next().getValue();
 
-                if (b == 0b0000_0001)
+                if ((b & 0x1) == 1)
                     changedBitPattern.put(BitPattern.values()[i], 1);
+                else
+                    changedBitPattern.put(BitPattern.values()[i], 0);
             }
         }
     }

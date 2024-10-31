@@ -36,7 +36,8 @@ public class BitmapIterator implements Iterator<PixelByte> {
         int byteIndex = (currentY * bitmap.getWidth() + currentX) * 3 + currentColor.index();
 
         // Get the current color component value
-        byte color = bitmap.getPixelData()[byteIndex];
+        byte data = bitmap.getPixelData()[byteIndex];
+        Color color = currentColor;
 
         currentColor = currentColor.nextColor();
         if (currentColor == Color.BLUE) {
@@ -49,7 +50,7 @@ public class BitmapIterator implements Iterator<PixelByte> {
             }
         }
         lastIndex = byteIndex;
-        return new PixelByte(color, currentColor);
+        return new PixelByte(data, color);
     }
 
     // Set a new byte value at the current position
@@ -61,5 +62,11 @@ public class BitmapIterator implements Iterator<PixelByte> {
         return 1;
     }
 
-
+    // Go back to the beginning of the bitmap
+    public void reset() {
+        this.currentX = 0;
+        this.currentY = 0;
+        this.currentColor = Color.BLUE;
+        this.lastIndex = 0;
+    }
 }
