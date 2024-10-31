@@ -75,8 +75,6 @@ public class LSBI extends LSB {
                 pixelValue = (byte) ((pixelValue & ~1) | bit);
                 bitIndex--;
 
-                System.out.println("Write pixel value: " + pixelValue);
-
                 int changed = iterator.setByte(pixelValue);
                 changedBitPattern.computeIfPresent(bitPattern, (k, v) -> v + changed);
             }

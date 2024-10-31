@@ -1,8 +1,12 @@
 package ar.edu.itba.cripto.arguments;
 
-import ar.edu.itba.cripto.encryption.EncryptionEnum;
+import ar.edu.itba.cripto.encryption.EncryptionAlgorithm;
 import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.EncryptionOptions;
+import ar.edu.itba.cripto.encryption.algorithms.AES128Encryption;
+import ar.edu.itba.cripto.encryption.algorithms.AES192Encryption;
+import ar.edu.itba.cripto.encryption.algorithms.AES256Encryption;
+import ar.edu.itba.cripto.encryption.algorithms.DES3Encryption;
 import ar.edu.itba.cripto.steganography.SteganographyType;
 import org.apache.commons.cli.*;
 
@@ -42,11 +46,20 @@ public class Parser {
         String outputFile = cmd.getOptionValue("out");
         SteganographyType steganographyType = SteganographyType.valueOf(cmd.getOptionValue("steg").toUpperCase());
 
-        EncryptionEnum encryptionEnum = EncryptionEnum.fromString(cmd.getOptionValue("a", "aes128"));
+        String encryptionAlgorithmArg = cmd.getOptionValue("a", "aes128");
+
+        EncryptionAlgorithm encryptionAlgorithm = switch (encryptionAlgorithmArg) {
+            case "aes128" -> new AES128Encryption();
+            case "aes192" -> new AES192Encryption();
+            case "aes256" -> new AES256Encryption();
+            case "3des" -> new DES3Encryption();
+            default -> throw new IllegalArgumentException("Invalid algorithm");
+        };
+
         EncryptionMode encryptionMode = EncryptionMode.valueOf(cmd.getOptionValue("m", "cbc").toUpperCase());
 
         EncryptionOptions encryptionOptions = new EncryptionOptions(
-                encryptionEnum,
+                encryptionAlgorithm,
                 encryptionMode,
                 password
         );

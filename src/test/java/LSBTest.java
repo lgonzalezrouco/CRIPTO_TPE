@@ -1,6 +1,6 @@
-import ar.edu.itba.cripto.encryption.EncryptionEnum;
 import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.EncryptionOptions;
+import ar.edu.itba.cripto.encryption.algorithms.DES3Encryption;
 import ar.edu.itba.cripto.steganography.LSB;
 import ar.edu.itba.cripto.steganography.LSB1;
 import ar.edu.itba.cripto.steganography.LSB4;
@@ -22,7 +22,7 @@ class LSBTest {
 
     private final static byte[] DATA = new byte[]{(byte) 0b01111110};
     private final static String EXTENSION = ".txt\0";
-    private final static EncryptionOptions ENCRYPTION_OPTIONS = new EncryptionOptions(EncryptionEnum.DES3, EncryptionMode.ECB, "password");
+    private final static EncryptionOptions ENCRYPTION_OPTIONS = new EncryptionOptions(new DES3Encryption(), EncryptionMode.ECB, "password");
     private Bitmap bitmap;
 
     @BeforeEach

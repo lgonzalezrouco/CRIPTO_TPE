@@ -8,6 +8,6 @@ public class AES128Encryption extends EncryptionAlgorithm {
     private static final int IV_SIZE = 16;
 
     public AES128Encryption() {
-        super("AES", IV_SIZE, KEY_SIZE_BYTES, "SHA-256");
+        super("AES", IV_SIZE, KEY_SIZE_BYTES);
     }
 }

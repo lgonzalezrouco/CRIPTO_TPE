@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum EncryptionMode {
     ECB("/ECB/PKCS5Padding"),
-    CFB("/CFB/NoPadding"),
+    CFB("/CFB8/NoPadding"),
     OFB("/OFB/NoPadding"),
     CBC("/CBC/PKCS5Padding");
 
