@@ -1,3 +1,5 @@
+[![Java CI with Maven](https://github.com/lgonzalezrouco/CRIPTO_TPE/actions/workflows/maven.yml/badge.svg)](https://github.com/lgonzalezrouco/CRIPTO_TPE/actions/workflows/maven.yml)
+
 # Proyecto: stegobmp
 
 ## Indice
