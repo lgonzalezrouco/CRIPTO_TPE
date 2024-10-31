@@ -58,7 +58,7 @@ public class Bitmap {
 
     public void saveToFile(File path) throws IOException {
         try (OutputStream stream = new FileOutputStream(path)) {
-            stream.write(header); // TODO: should the header be modified?
+            stream.write(header);
             stream.write(pixelData);
         }
     }

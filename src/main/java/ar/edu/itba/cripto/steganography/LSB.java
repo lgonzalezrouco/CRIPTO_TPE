@@ -82,8 +82,6 @@ public abstract class LSB {
 
         byte[] message = new byte[size];
 
-        System.out.println(size);
-
         if (size > dataToParse.length - 4)
             throw new IllegalArgumentException("The size of the message is bigger than the data");
 
