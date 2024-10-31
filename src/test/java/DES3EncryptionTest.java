@@ -67,7 +67,7 @@ public class DES3EncryptionTest {
 
         SecretKeySpec secretKey = new SecretKeySpec(opensslKey, "DESede");
         IvParameterSpec ivSpec = new IvParameterSpec(opensslIV);
-        Cipher cipher = Cipher.getInstance("DESede/CFB/NoPadding");
+        Cipher cipher = Cipher.getInstance("DESede/CFB8/NoPadding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
         byte[] decrypted2 = cipher.doFinal(encrypted);
         Assertions.assertEquals(message, new String(decrypted2));
