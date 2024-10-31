@@ -1,4 +1,3 @@
-/*
 import ar.edu.itba.cripto.encryption.EncryptionEnum;
 import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.EncryptionOptions;
@@ -140,4 +139,3 @@ class LSBTest {
 
 
 }
-*/

@@ -1,24 +1,22 @@
-/*
 import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.algorithms.AES256Encryption;
 import ar.edu.itba.cripto.encryption.algorithms.DES3Encryption;
 import ar.edu.itba.cripto.steganography.*;
 import ar.edu.itba.cripto.utils.Bitmap;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
-
-*/
-/**
- * Created by Mateo on 26/10/2020.
- * This class is used to test the steganography methods.
- * We use professors example images to test the methods.
- *//*
 
 public class SteganographyTest {
 
@@ -62,6 +60,7 @@ public class SteganographyTest {
             stream.write(embeddedFile.getData());
         }
     }
+
     @Test
     public void fileTests() throws IOException {
         Bitmap bitmap = Bitmap.loadFile(new File("src/main/resources/grupo14/avatar.bmp"));
@@ -76,7 +75,7 @@ public class SteganographyTest {
     }
 
     @Test
-    public void lsbiEncryptedAes() throws IOException {
+    public void lsbiEncryptedAes() throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Bitmap bitmap = Bitmap.loadFile(new File("src/main/resources/ejemplo2024/ladoLSBIaes256ofb.bmp"));
         LSB lsb = new LSBI();
         byte[] data = lsb.extract(bitmap);
@@ -92,7 +91,7 @@ public class SteganographyTest {
     }
 
     @Test
-    public void lsbiEncryptedDes() throws IOException {
+    public void lsbiEncryptedDes() throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Bitmap bitmap = Bitmap.loadFile(new File("src/main/resources/ejemplo2024/ladoLSBIdescfb.bmp"));
         LSB lsb = new LSBI();
         byte[] data = lsb.extract(bitmap);
@@ -106,8 +105,9 @@ public class SteganographyTest {
             stream.write(embeddedFile.getData());
         }
     }
+
     @Test
-    public void lsbiSecretoTest() throws IOException {
+    public void lsbiSecretoTest() throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Bitmap bitmap = Bitmap.loadFile(new File("src/main/resources/grupo14/secreto1.bmp"));
         LSB lsb = new LSBI();
         byte[] data = lsb.extract(bitmap);
@@ -123,4 +123,3 @@ public class SteganographyTest {
     }
 
 }
-*/

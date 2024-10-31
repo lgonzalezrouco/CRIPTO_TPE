@@ -1,8 +1,15 @@
-/*
 import ar.edu.itba.cripto.encryption.EncryptionMode;
 import ar.edu.itba.cripto.encryption.algorithms.AES128Encryption;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 public class AES128EncryptionTest {
 
@@ -10,7 +17,7 @@ public class AES128EncryptionTest {
     private final String pass = "password";
 
     @Test
-    public void AES128EncryptionCBCModeTest() {
+    public void AES128EncryptionCBCModeTest() throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         AES128Encryption encryption = new AES128Encryption();
         byte[] encrypted = encryption.encrypt(message.getBytes(), pass, EncryptionMode.CBC);
         Assertions.assertNotEquals(message, new String(encrypted));
@@ -19,7 +26,7 @@ public class AES128EncryptionTest {
     }
 
     @Test
-    public void AES128EncryptionCFBModeTest() {
+    public void AES128EncryptionCFBModeTest() throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         AES128Encryption encryption = new AES128Encryption();
         byte[] encrypted = encryption.encrypt(message.getBytes(), pass, EncryptionMode.CFB);
         Assertions.assertNotEquals(message, new String(encrypted));
@@ -28,7 +35,7 @@ public class AES128EncryptionTest {
     }
 
     @Test
-    public void AES128EncryptionEBCModeTest() {
+    public void AES128EncryptionEBCModeTest() throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         AES128Encryption encryption = new AES128Encryption();
         byte[] encrypted = encryption.encrypt(message.getBytes(), pass, EncryptionMode.ECB);
         Assertions.assertNotEquals(message, new String(encrypted));
@@ -37,7 +44,7 @@ public class AES128EncryptionTest {
     }
 
     @Test
-    public void AES128EncryptionOFBModeTest() {
+    public void AES128EncryptionOFBModeTest() throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         AES128Encryption encryption = new AES128Encryption();
         byte[] encrypted = encryption.encrypt(message.getBytes(), pass, EncryptionMode.OFB);
         Assertions.assertNotEquals(message, new String(encrypted));
@@ -47,4 +54,3 @@ public class AES128EncryptionTest {
 
 
 }
-*/
