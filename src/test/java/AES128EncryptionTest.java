@@ -54,6 +54,9 @@ public class AES128EncryptionTest {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
         byte[] encrypted2 = cipher.doFinal(message.getBytes());
         Assertions.assertEquals(new String(encrypted), new String(encrypted2));
+
+        byte[] decrypted3 = encryption.decrypt(encrypted2, pass, EncryptionMode.CBC);
+        Assertions.assertEquals(message, new String(decrypted3));
     }
 
     @Test
@@ -67,18 +70,24 @@ public class AES128EncryptionTest {
 
         SecretKeySpec secretKey = new SecretKeySpec(opensslKey, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(opensslIV);
-        Cipher cipher = Cipher.getInstance("AES/CFB/NoPadding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
-        byte[] decrypted2 = cipher.doFinal(encrypted);
+
+        System.out.println();
+        Cipher cipher=Cipher.getInstance("AES/CFB8/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey,ivSpec);
+        byte[] decrypted2=cipher.doFinal(encrypted);
+
         Assertions.assertEquals(message, new String(decrypted2));
 
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
         byte[] encrypted2 = cipher.doFinal(message.getBytes());
         Assertions.assertEquals(new String(encrypted), new String(encrypted2));
+
+        byte[] decrypted3 = encryption.decrypt(encrypted2, pass, EncryptionMode.CFB);
+        Assertions.assertEquals(message, new String(decrypted3));
     }
 
     @Test
-    public void AES128EncryptionEBCModeTest() throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+    public void AES128EncryptionECBModeTest() throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         AES128Encryption encryption = new AES128Encryption();
         byte[] encrypted = encryption.encrypt(message.getBytes(), pass, EncryptionMode.ECB);
         Assertions.assertNotEquals(message, new String(encrypted));
@@ -96,6 +105,9 @@ public class AES128EncryptionTest {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         byte[] encrypted2 = cipher.doFinal(message.getBytes());
         Assertions.assertEquals(new String(encrypted), new String(encrypted2));
+
+        byte[] decrypted3 = encryption.decrypt(encrypted2, pass, EncryptionMode.ECB);
+        Assertions.assertEquals(message, new String(decrypted3));
     }
 
     @Test
@@ -117,6 +129,9 @@ public class AES128EncryptionTest {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
         byte[] encrypted2 = cipher.doFinal(message.getBytes());
         Assertions.assertEquals(new String(encrypted), new String(encrypted2));
+
+        byte[] decrypted3 = encryption.decrypt(encrypted2, pass, EncryptionMode.OFB);
+        Assertions.assertEquals(message, new String(decrypted3));
 
     }
 
