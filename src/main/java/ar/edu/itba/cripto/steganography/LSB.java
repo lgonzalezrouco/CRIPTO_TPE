@@ -81,6 +81,10 @@ public abstract class LSB {
         int size = buffer.getInt(); // it reads the first 4 bytes and moves the position
 
         byte[] message = new byte[size];
+
+        if(size > dataToParse.length - 4)
+            throw new IllegalArgumentException("The size of the message is bigger than the data");
+
         buffer.get(message);
         // dataToParse.length -SizeBytes - size - 1 (extension null terminated)
         byte[] extensionBytes = new byte[dataToParse.length - 4 - size - 1];

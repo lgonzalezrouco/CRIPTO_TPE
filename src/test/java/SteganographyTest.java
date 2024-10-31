@@ -47,7 +47,6 @@ public class SteganographyTest {
     }
 
     // test for lsbi simple
-
     @Test
     public void lsbiTest() throws IOException {
         Bitmap bitmap = Bitmap.loadFile(new File("src/main/resources/ejemplo2024/ladoLSBI.bmp"));
@@ -60,7 +59,18 @@ public class SteganographyTest {
             stream.write(embeddedFile.getData());
         }
     }
-
+    @Test
+    public void fileTests() throws IOException {
+        Bitmap bitmap = Bitmap.loadFile(new File("src/main/resources/grupo14/avatar.bmp"));
+        LSB lsb = new LSBI();
+        byte[] data = lsb.extractWithExtension(bitmap);
+        // parse to embedded file
+        EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(data);
+        // save to file
+        try (OutputStream stream = new FileOutputStream("src/test/resources/results/avatar" + embeddedFile.getExtension())) {
+            stream.write(embeddedFile.getData());
+        }
+    }
 
     @Test
     public void lsbiEncryptedAes() throws IOException {
@@ -90,6 +100,21 @@ public class SteganographyTest {
         EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(decrypted);
         // save to file
         try (OutputStream stream = new FileOutputStream("src/test/resources/results/LSBIdescfb" + embeddedFile.getExtension())) {
+            stream.write(embeddedFile.getData());
+        }
+    }
+    @Test
+    public void lsbiSecretoTest() throws IOException {
+        Bitmap bitmap = Bitmap.loadFile(new File("src/main/resources/grupo14/secreto1.bmp"));
+        LSB lsb = new LSBI();
+        byte[] data = lsb.extract(bitmap);
+        data = Arrays.copyOfRange(data, 4, data.length);
+        DES3Encryption aes256Encryption = new DES3Encryption();
+        byte[] decrypted = aes256Encryption.decrypt(data, "metadata", EncryptionMode.OFB);
+        // parse to embedded file
+        EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(decrypted);
+        // save to file
+        try (OutputStream stream = new FileOutputStream("src/test/resources/results/metadata" + embeddedFile.getExtension())) {
             stream.write(embeddedFile.getData());
         }
     }
