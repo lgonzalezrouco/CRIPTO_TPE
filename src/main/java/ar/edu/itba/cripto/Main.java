@@ -48,7 +48,8 @@ public class Main {
                 try {
                     dataToEmbed = args.encryptionOptions().encrypt(dataToEmbed);
                 } catch (EncryptionException e) {
-                    throw new RuntimeException("Error encrypting data", e);
+                    System.err.println("Error encrypting data: " + e);
+                    return;
                 }
                 dataToEmbed = lsb.getEncryptedBytesToHide(dataToEmbed);
             }
@@ -56,7 +57,8 @@ public class Main {
             try {
                 lsb.hide(bitmap, dataToEmbed, args.getExtension(args.inputFile()));
             } catch (MessageToLargeException e) {
-                throw new RuntimeException("Error: Data is too big for carrier", e);
+                System.err.println("Error: Data is too big for carrier");
+                return;
             }
 
             bitmap.saveToFile(new File(args.outputFile()));
@@ -66,7 +68,7 @@ public class Main {
         }
     }
 
-    public static void extract(Arguments args, LSB lsb, Bitmap bitmap) throws IOException {
+    public static void extract(Arguments args, LSB lsb, Bitmap bitmap) {
         byte[] extractedData;
 
         if (args.encryptionOptions().password() != null) {
@@ -76,7 +78,8 @@ public class Main {
                 extractedData = args.encryptionOptions().decrypt(extractedData);
 
             } catch (Exception e) {
-                throw new RuntimeException("Error decrypting data", e);
+                System.err.println("Error decrypting data: " + e);
+                return;
             }
         } else {
             extractedData = lsb.extractWithExtension(bitmap);
@@ -85,6 +88,8 @@ public class Main {
         EmbeddedFile embeddedFile = lsb.parseToEmbeddedFile(extractedData);
         try (OutputStream stream = new FileOutputStream(args.outputFile() + embeddedFile.getExtension())) {
             stream.write(embeddedFile.getData());
+        } catch (Exception e) {
+            System.err.println("There was a problem writing to file: " + e);
         }
     }
 }

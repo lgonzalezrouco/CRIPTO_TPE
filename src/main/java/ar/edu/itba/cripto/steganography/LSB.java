@@ -1,6 +1,7 @@
 package ar.edu.itba.cripto.steganography;
 
 import ar.edu.itba.cripto.steganography.exceptions.MessageToLargeException;
+import ar.edu.itba.cripto.steganography.exceptions.NoSizeFoundException;
 import ar.edu.itba.cripto.utils.Bitmap;
 import ar.edu.itba.cripto.utils.BitmapIterator;
 
@@ -78,15 +79,14 @@ public abstract class LSB {
         // dataToParse: size (4) | data | extension
         ByteBuffer buffer = ByteBuffer.wrap(dataToParse);
 
-        int size = buffer.getInt(); // it reads the first 4 bytes and moves the position
+        int size = buffer.getInt();
 
         byte[] message = new byte[size];
 
         if (size > dataToParse.length - 4)
-            throw new IllegalArgumentException("The size of the message is bigger than the data");
+            throw new MessageToLargeException("The size of the message is bigger than the data");
 
         buffer.get(message);
-        // dataToParse.length -SizeBytes - size - 1 (extension null terminated)
         byte[] extensionBytes = new byte[dataToParse.length - 4 - size - 1];
         buffer.get(extensionBytes);
         String extension = new String(extensionBytes, StandardCharsets.UTF_8);
@@ -136,6 +136,6 @@ public abstract class LSB {
                 return ByteBuffer.wrap(sizeByte).getInt();
             }
         }
-        throw new IllegalArgumentException("No size found");
+        throw new NoSizeFoundException("No size found");
     }
 }

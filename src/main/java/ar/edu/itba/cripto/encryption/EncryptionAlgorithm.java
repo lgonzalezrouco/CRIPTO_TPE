@@ -35,8 +35,6 @@ public abstract class EncryptionAlgorithm {
         SecretKeySpec secretKey = keyIvPair.secretKey;
         IvParameterSpec ivSpec = keyIvPair.ivSpec;
 
-        printKeyAndIv(secretKey, ivSpec);
-
         Cipher cipher = Cipher.getInstance(algorithmPrefix + encryptionMode.getName());
         if (encryptionMode == EncryptionMode.ECB) {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -54,8 +52,6 @@ public abstract class EncryptionAlgorithm {
         KeyIvPair keyIvPair = generateKeyAndIv(pass);
         SecretKeySpec secretKey = keyIvPair.secretKey;
         IvParameterSpec ivSpec = keyIvPair.ivSpec;
-
-        printKeyAndIv(secretKey, ivSpec);
 
         Cipher cipher = Cipher.getInstance(algorithmPrefix + encryptionMode.getName());
         if (encryptionMode == EncryptionMode.ECB) {
@@ -79,18 +75,6 @@ public abstract class EncryptionAlgorithm {
         IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 
         return new KeyIvPair(secretKey, ivSpec);
-    }
-
-    private void printKeyAndIv(SecretKeySpec secretKey, IvParameterSpec ivSpec) {
-        for (byte b : secretKey.getEncoded()) {
-            System.out.printf("%02X", b);
-        }
-        System.out.println();
-
-        for (byte b : ivSpec.getIV()) {
-            System.out.printf("%02X", b);
-        }
-        System.out.println();
     }
 
     private static class KeyIvPair {
