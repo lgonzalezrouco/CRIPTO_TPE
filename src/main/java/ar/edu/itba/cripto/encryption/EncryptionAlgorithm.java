@@ -94,9 +94,11 @@ public abstract class EncryptionAlgorithm {
         return cipher.doFinal(encryptedData);
     }
 
+/*
     private SecretKey generateKeyFromPassword(String pass) throws Exception {
         MessageDigest sha = MessageDigest.getInstance(hashAlgorithm);
         byte[] key = sha.digest(pass.getBytes(StandardCharsets.UTF_8));
         return new SecretKeySpec(Arrays.copyOf(key, keySize), algorithmPrefix);
     }
+*/
 }

@@ -22,7 +22,7 @@ class LSBTest {
 
     private final static byte[] DATA = new byte[]{(byte) 0b01111110};
     private final static String EXTENSION = ".txt\0";
-    private final static EncryptionOptions ENCRYPTION_OPTIONS = new EncryptionOptions(EncryptionEnum.AES128, EncryptionMode.CBC, "password");
+    private final static EncryptionOptions ENCRYPTION_OPTIONS = new EncryptionOptions(EncryptionEnum.DES3, EncryptionMode.ECB, "password");
     private Bitmap bitmap;
 
     @BeforeEach
