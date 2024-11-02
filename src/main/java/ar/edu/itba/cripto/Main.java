@@ -57,7 +57,8 @@ public class Main {
             try {
                 lsb.hide(bitmap, dataToEmbed, args.getExtension(args.inputFile()));
             } catch (MessageToLargeException e) {
-                System.err.println("Error: Data is too big for carrier");
+                int maxMessageSize = lsb.maxMessageSize(bitmap);
+                System.err.printf("Error: Data is too big for carrier, the max amount of bytes you can embed: %d", maxMessageSize);
                 return;
             }
 

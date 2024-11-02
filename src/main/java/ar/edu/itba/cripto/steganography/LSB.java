@@ -138,4 +138,7 @@ public abstract class LSB {
         }
         throw new NoSizeFoundException("No size found");
     }
+
+    // max message size
+    public abstract int maxMessageSize(Bitmap carrier);
 }

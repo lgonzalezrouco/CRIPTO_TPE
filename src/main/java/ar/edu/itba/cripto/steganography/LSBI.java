@@ -22,8 +22,7 @@ public class LSBI extends LSB {
 
     @Override
     public void hide(Bitmap carrier, byte[] message, String extension) {
-        int availablePixels = (int) Math.floor((carrier.getPixelDataSize() / 3.0) * 2.0);
-        if ((message.length + 4) > availablePixels / 8) {
+        if (message.length > maxMessageSize(carrier)) {
             throw new MessageToLargeException("Data is too big for carrier");
         }
 
@@ -172,5 +171,11 @@ public class LSBI extends LSB {
                 default -> throw new IllegalStateException("Unexpected value: " + pixelByte);
             }
         }
+    }
+
+    @Override
+    public int maxMessageSize(Bitmap carrier) {
+
+        return (int) Math.floor(((carrier.getPixelDataSize() -4) / 3.0) * 2.0) / 8 ;
     }
 }

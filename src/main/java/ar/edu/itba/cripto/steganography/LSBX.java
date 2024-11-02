@@ -16,7 +16,7 @@ public abstract class LSBX extends LSB {
 
     @Override
     public void hide(Bitmap carrier, byte[] message, String extension) {
-        int maxDataSize = carrier.getPixelDataSize() / bitsToHide;
+        int maxDataSize = maxMessageSize(carrier);
         if (message.length > maxDataSize) {
             throw new MessageToLargeException("Data is too big for carrier");
         }
@@ -72,4 +72,10 @@ public abstract class LSBX extends LSB {
 
         return bitIndex < 0 ? (byte) currentByte : null;
     }
+
+    @Override
+    public int maxMessageSize(Bitmap carrier) {
+        return (carrier.getPixelDataSize() * bitsToHide) / 8;
+    }
+
 }
