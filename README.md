@@ -73,6 +73,10 @@ Por ejemplo:
 
 ```bash
 ./stegobmp -embed -in mensaje.txt -p imagen.bmp -out imagen_con_mensaje -steg LSBI -a 3des -m cbc -pass "password"
+# ejemplo:
+echo hola > src/main/resources/ejemplo2024/mensaje.txt
+./stegobmp -embed -in src/main/resources/ejemplo2024/mensaje.txt -p src/main/resources/ejemplo2024/lado.bmp -out src/main/resources/ejemplo2024/ladoLSB1MIO.bmp -steg LSB1 -a 3des -m cbc -pass oculto
+
 ```
 
 ### 2. Extraer un Archivo
@@ -81,6 +85,8 @@ Para extraer un archivo oculto en una imagen BMP, el comando es:
 
 ```bash
 ./stegobmp -extract -p <imagen_portador> -out <archivo_extraido> -steg <LSB1 | LSB4 | LSBI> [-a <aes128|aes192|aes256|3des>] [-m <ecb|cfb|ofb|cbc>] [-pass <password>]
+# ejemplo:
+./stegobmp -extract -p src/main/resources/ejemplo2024/ladoLSB1MIO.bmp -out src/main/resources/ejemplo2024/result -steg LSB1 -a 3des -m cbc -pass oculto
 ```
 
 Por ejemplo:
